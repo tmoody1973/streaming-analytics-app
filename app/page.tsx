@@ -14,6 +14,8 @@ import DaypartComparison from "@/components/dashboard/DaypartComparison";
 import DeviceAnalysis from "@/components/dashboard/DeviceAnalysis";
 import HourlyPatterns from "@/components/dashboard/HourlyPatterns";
 import DashboardSection from "@/components/dashboard/DashboardSection";
+import DashboardTabs from "@/components/dashboard/DashboardTabs";
+import KPISummary from "@/components/dashboard/KPISummary";
 
 export default function Home() {
   const [dataContext, setDataContext] = useState<DataContext>({
@@ -26,6 +28,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [selectedStation, setSelectedStation] = useState<string>("all");
   const [dateRange, setDateRange] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState<string>("overview");
 
   // Load data from localStorage on mount
   useEffect(() => {
@@ -258,36 +261,60 @@ export default function Home() {
         {/* Sidebar Navigation */}
         <aside className="w-64 bg-radiomke-charcoal-600 min-h-screen border-r border-radiomke-charcoal-400/30">
           <nav className="p-4 space-y-2">
-            <a
-              href="#dashboard"
-              className="block px-4 py-2 rounded-lg text-radiomke-cream-500 bg-radiomke-orange-500 hover:bg-radiomke-orange-600 transition-colors"
+            <button
+              onClick={() => setActiveTab("overview")}
+              className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                activeTab === "overview"
+                  ? "text-radiomke-cream-500 bg-radiomke-orange-500"
+                  : "text-radiomke-cream-500 hover:bg-radiomke-charcoal-700"
+              }`}
             >
-              Dashboard
-            </a>
-            <a
-              href="#upload"
-              className="block px-4 py-2 rounded-lg text-radiomke-cream-500 hover:bg-radiomke-charcoal-700 transition-colors"
+              📊 Overview
+            </button>
+            <button
+              onClick={() => setActiveTab("hourly")}
+              className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                activeTab === "hourly"
+                  ? "text-radiomke-cream-500 bg-radiomke-orange-500"
+                  : "text-radiomke-cream-500 hover:bg-radiomke-charcoal-700"
+              }`}
             >
-              Upload Data
-            </a>
-            <a
-              href="#trends"
-              className="block px-4 py-2 rounded-lg text-radiomke-cream-500 hover:bg-radiomke-charcoal-700 transition-colors"
+              🕐 Hourly Patterns
+            </button>
+            <button
+              onClick={() => setActiveTab("daypart")}
+              className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                activeTab === "daypart"
+                  ? "text-radiomke-cream-500 bg-radiomke-orange-500"
+                  : "text-radiomke-cream-500 hover:bg-radiomke-charcoal-700"
+              }`}
             >
-              Trend Analysis
-            </a>
-            <a
-              href="#nielsen"
-              className="block px-4 py-2 rounded-lg text-radiomke-cream-500 hover:bg-radiomke-charcoal-700 transition-colors"
+              🌅 Daypart Analysis
+            </button>
+            <button
+              onClick={() => setActiveTab("device")}
+              className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                activeTab === "device"
+                  ? "text-radiomke-cream-500 bg-radiomke-orange-500"
+                  : "text-radiomke-cream-500 hover:bg-radiomke-charcoal-700"
+              }`}
             >
-              Nielsen Integration
-            </a>
-            <a
-              href="#demographics"
-              className="block px-4 py-2 rounded-lg text-radiomke-cream-500 hover:bg-radiomke-charcoal-700 transition-colors"
-            >
-              Demographics
-            </a>
+              📱 Device/Platform
+            </button>
+            <div className="pt-4 mt-4 border-t border-radiomke-charcoal-400/30">
+              <a
+                href="#upload"
+                className="block px-4 py-2 rounded-lg text-radiomke-cream-600 hover:bg-radiomke-charcoal-700 hover:text-radiomke-cream-500 transition-colors text-sm"
+              >
+                📤 Upload Data
+              </a>
+              <a
+                href="#guide"
+                className="block px-4 py-2 rounded-lg text-radiomke-cream-600 hover:bg-radiomke-charcoal-700 hover:text-radiomke-cream-500 transition-colors text-sm"
+              >
+                📚 Export Guide
+              </a>
+            </div>
           </nav>
         </aside>
 
@@ -363,46 +390,88 @@ export default function Home() {
             {/* Dashboard Components */}
             {dataContext.streamingData.length > 0 && (
               <div className="space-y-6 mt-6">
-                {/* Always show Metrics Overview if we have any data */}
-                <MetricsOverview data={filteredData} />
+                {/* KPI Summary Cards */}
+                <KPISummary data={filteredData} />
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Always show Trend Analysis if we have any data */}
-                  <TrendAnalysis data={filteredData} />
+                {/* Dashboard Tabs */}
+                <DashboardTabs
+                  tabs={[
+                    { id: "overview", label: "Overview" },
+                    { id: "hourly", label: "Hourly Patterns" },
+                    { id: "daypart", label: "Daypart Analysis" },
+                    { id: "device", label: "Device/Platform" },
+                  ]}
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                />
 
-                  {/* Daypart Comparison - only if we have daypart data */}
+                {/* Overview Tab */}
+                {activeTab === "overview" && (
+                  <div className="space-y-6">
+                    <MetricsOverview data={filteredData} />
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <TrendAnalysis data={filteredData} />
+                      <div className="bg-radiomke-charcoal-600 rounded-lg p-6 border border-radiomke-charcoal-400/30">
+                        <h3 className="text-lg font-semibold text-radiomke-cream-500 mb-4">Quick Stats</h3>
+                        <div className="space-y-3">
+                          <div>
+                            <p className="text-sm text-radiomke-cream-600">Total Data Points</p>
+                            <p className="text-2xl font-bold text-radiomke-orange-400">
+                              {filteredData.length.toLocaleString()}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-radiomke-cream-600">Date Range</p>
+                            <p className="text-sm text-radiomke-cream-500">
+                              {filteredData.length > 0
+                                ? `${new Date(Math.min(...filteredData.map((m) => m.date.getTime()))).toLocaleDateString()} - ${new Date(Math.max(...filteredData.map((m) => m.date.getTime()))).toLocaleDateString()}`
+                                : "No data"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Hourly Patterns Tab */}
+                {activeTab === "hourly" && (
                   <DashboardSection
-                    title="Daypart Comparison"
-                    description="Compare performance across different time periods"
+                    title="Hourly Listening Patterns"
+                    description="Analyze audience behavior by hour of day"
+                    hasData={dataAvailability.hasHourly}
+                    missingDataMessage="Upload hourly patterns CSV to see peak listening times by hour"
+                    requiredExport="radio_milwaukee_hourly_patterns.csv"
+                  >
+                    <HourlyPatterns data={filteredData} />
+                  </DashboardSection>
+                )}
+
+                {/* Daypart Tab */}
+                {activeTab === "daypart" && (
+                  <DashboardSection
+                    title="Daypart Performance Analysis"
+                    description="Compare performance across dayparts (Morning Drive, Midday, etc.)"
                     hasData={dataAvailability.hasDaypart}
-                    missingDataMessage="Upload a CSV file with daypart information to see this analysis"
+                    missingDataMessage="Upload daypart performance CSV to see analysis by time period"
                     requiredExport="radio_milwaukee_daypart_performance.csv"
                   >
                     <DaypartComparison data={filteredData} />
                   </DashboardSection>
-                </div>
+                )}
 
-                {/* Device Analysis - only if we have device data */}
-                <DashboardSection
-                  title="Device Analysis"
-                  description="Listener breakdown by platform/station"
-                  hasData={dataAvailability.hasDevice}
-                  missingDataMessage="Upload a CSV file with device/platform information to see this breakdown"
-                  requiredExport="radio_milwaukee_device_analysis.csv"
-                >
-                  <DeviceAnalysis data={filteredData} />
-                </DashboardSection>
-
-                {/* Hourly Patterns - only if we have hourly data */}
-                <DashboardSection
-                  title="Hourly Listening Patterns"
-                  description="Audience patterns by hour of day"
-                  hasData={dataAvailability.hasHourly}
-                  missingDataMessage="Upload a CSV file with hourly breakdown to see peak listening times"
-                  requiredExport="radio_milwaukee_hourly_patterns.csv"
-                >
-                  <HourlyPatterns data={filteredData} />
-                </DashboardSection>
+                {/* Device/Platform Tab */}
+                {activeTab === "device" && (
+                  <DashboardSection
+                    title="Device & Platform Analysis"
+                    description="Listener distribution across Smart Speaker, Mobile, Desktop, etc."
+                    hasData={dataAvailability.hasDevice}
+                    missingDataMessage="Upload device analysis CSV to see platform breakdown"
+                    requiredExport="radio_milwaukee_device_analysis.csv"
+                  >
+                    <DeviceAnalysis data={filteredData} />
+                  </DashboardSection>
+                )}
               </div>
             )}
           </div>
