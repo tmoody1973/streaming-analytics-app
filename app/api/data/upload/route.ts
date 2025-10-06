@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Papa from "papaparse";
-import { detectCSVType, parseTritonMetrics, parseNielsenMetrics } from "@/lib/utils/radioMetrics";
+import { detectCSVType, detectExportType, parseTritonMetrics, parseNielsenMetrics } from "@/lib/utils/radioMetrics";
 
 export async function POST(request: NextRequest) {
   try {
@@ -67,6 +67,10 @@ export async function POST(request: NextRequest) {
     // Detect data type
     const headers = Object.keys(data[0]);
     const dataType = detectCSVType(headers);
+    const exportType = detectExportType(headers, file.name);
+
+    console.log(`Detected export type: ${exportType.type} (category: ${exportType.category})`);
+    console.log(`Has station: ${exportType.hasStation}, daypart: ${exportType.hasDaypart}, device: ${exportType.hasDevice}`);
 
     if (dataType === "unknown") {
       return NextResponse.json(
@@ -79,7 +83,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Process based on type
-    let processedMetrics;
+    let processedMetrics: any[] = [];
     let recordCount = 0;
 
     try {
@@ -110,6 +114,8 @@ export async function POST(request: NextRequest) {
         success: true,
         id: crypto.randomUUID(),
         type: dataType,
+        exportType: exportType.type, // Specific export type (Daily Overview, Daypart Performance, etc.)
+        category: exportType.category, // Category (daily, daypart, device, etc.)
         recordCount,
         fileName: file.name,
         fileSize: file.size,

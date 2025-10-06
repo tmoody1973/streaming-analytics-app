@@ -12,6 +12,7 @@ import MetricsOverview from "@/components/dashboard/MetricsOverview";
 import TrendAnalysis from "@/components/dashboard/TrendAnalysis";
 import DaypartComparison from "@/components/dashboard/DaypartComparison";
 import DeviceAnalysis from "@/components/dashboard/DeviceAnalysis";
+import DashboardSection from "@/components/dashboard/DashboardSection";
 
 export default function Home() {
   const [dataContext, setDataContext] = useState<DataContext>({
@@ -158,6 +159,19 @@ export default function Home() {
 
     return filtered;
   }, [dataContext.streamingData, selectedStation, dateRange]);
+
+  // Detect what types of data are available
+  const dataAvailability = useMemo(() => {
+    const hasDaypart = filteredData.some((m) => m.daypart);
+    const hasDevice = filteredData.some((m) => m.device);
+    const hasBasicData = filteredData.length > 0;
+
+    return {
+      hasDaypart,
+      hasDevice,
+      hasBasicData,
+    };
+  }, [filteredData]);
 
   // Make data accessible to AI
   useCopilotReadable({
@@ -342,14 +356,35 @@ export default function Home() {
             {/* Dashboard Components */}
             {dataContext.streamingData.length > 0 && (
               <div className="space-y-6 mt-6">
+                {/* Always show Metrics Overview if we have any data */}
                 <MetricsOverview data={filteredData} />
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Always show Trend Analysis if we have any data */}
                   <TrendAnalysis data={filteredData} />
-                  <DaypartComparison data={filteredData} />
+
+                  {/* Daypart Comparison - only if we have daypart data */}
+                  <DashboardSection
+                    title="Daypart Comparison"
+                    description="Compare performance across different time periods"
+                    hasData={dataAvailability.hasDaypart}
+                    missingDataMessage="Upload a CSV file with daypart information to see this analysis"
+                    requiredExport="radio_milwaukee_daypart_performance.csv"
+                  >
+                    <DaypartComparison data={filteredData} />
+                  </DashboardSection>
                 </div>
 
-                <DeviceAnalysis data={filteredData} />
+                {/* Device Analysis - only if we have device data */}
+                <DashboardSection
+                  title="Device Analysis"
+                  description="Listener breakdown by platform/station"
+                  hasData={dataAvailability.hasDevice}
+                  missingDataMessage="Upload a CSV file with device/platform information to see this breakdown"
+                  requiredExport="radio_milwaukee_device_analysis.csv"
+                >
+                  <DeviceAnalysis data={filteredData} />
+                </DashboardSection>
               </div>
             )}
           </div>

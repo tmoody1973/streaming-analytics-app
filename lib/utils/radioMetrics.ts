@@ -112,10 +112,14 @@ export function parseTritonMetrics(csvData: any[]): RadioMetrics[] {
       const date = dateStr ? new Date(dateStr) : new Date();
 
       // Station name
-      const station = getCellValue(row, ["Station", "station", "STATION"]);
+      const station = getCellValue(row, ["Station", "station", "STATION", "Stream"]) || undefined;
 
-      const daypart = getCellValue(row, ["Daypart", "daypart", "DAYPART"]) || undefined;
-      const device = getCellValue(row, ["Device", "device", "DEVICE"]) || station || undefined;
+      // Daypart (e.g., "Morning Drive", "Midday", "Afternoon Drive")
+      const daypart = getCellValue(row, ["Daypart", "daypart", "DAYPART", "Day Part"]) || undefined;
+
+      // Device/Platform (e.g., "Mobile", "Desktop", "Smart Speaker")
+      // Do NOT fallback to station - these are completely different categories
+      const device = getCellValue(row, ["Device", "device", "DEVICE", "Device Family", "Platform"]) || undefined;
 
       const validation = validateRadioMetrics({ cume, tlh });
 
@@ -273,4 +277,81 @@ export function detectCSVType(headers: string[]): "triton" | "nielsen" | "unknow
     headerLower.includes("cume") && headerLower.includes("tlh");
 
   return hasCommonMetrics ? "triton" : "unknown";
+}
+
+/**
+ * Detect specific CSV export type based on headers and filename
+ * This helps identify which of the 22 export types the file is
+ */
+export function detectExportType(headers: string[], filename: string): {
+  type: string;
+  category: "daily" | "daypart" | "device" | "geographic" | "demographic" | "hourly" | "unknown";
+  hasStation: boolean;
+  hasDaypart: boolean;
+  hasDevice: boolean;
+  hasHour: boolean;
+} {
+  const headerLower = headers.map((h) => h.toLowerCase());
+  const filenameLower = filename.toLowerCase();
+
+  const hasStation = headerLower.includes("station") || headerLower.includes("stream");
+  const hasDaypart = headerLower.includes("daypart") || headerLower.includes("day part");
+  const hasDevice = headerLower.includes("device") || headerLower.includes("device family") || headerLower.includes("platform");
+  const hasHour = headerLower.includes("hour") || headerLower.includes("hour of day");
+  const hasDay = headerLower.includes("day of week");
+  const hasMonth = headerLower.includes("month") || headerLower.includes("year");
+  const hasLocation = headerLower.includes("country") || headerLower.includes("state") || headerLower.includes("city") || headerLower.includes("location");
+  const hasDemographic = headerLower.some(h => h.includes("age") || h.includes("gender") || h.includes("ethnic"));
+
+  // Detect type based on headers and filename
+  let type = "unknown";
+  let category: "daily" | "daypart" | "device" | "geographic" | "demographic" | "hourly" | "unknown" = "unknown";
+
+  if (hasDemographic) {
+    type = "Nielsen Demographics";
+    category = "demographic";
+  } else if (hasLocation) {
+    type = "Geographic Distribution";
+    category = "geographic";
+  } else if (hasDevice && hasDaypart) {
+    type = "Daypart by Device Cross-Analysis";
+    category = "device";
+  } else if (hasDevice) {
+    type = "Device Analysis";
+    category = "device";
+  } else if (hasDaypart && hasHour) {
+    // Specific daypart details (Morning Drive, Afternoon Drive, etc.)
+    if (filenameLower.includes("morning")) type = "Morning Drive";
+    else if (filenameLower.includes("midday")) type = "Midday";
+    else if (filenameLower.includes("afternoon")) type = "Afternoon Drive";
+    else if (filenameLower.includes("evening")) type = "Evening";
+    else if (filenameLower.includes("overnight")) type = "Overnight";
+    else if (filenameLower.includes("weekend")) type = "Weekend";
+    else type = "Daypart Detail";
+    category = "daypart";
+  } else if (hasDaypart) {
+    type = "Daypart Performance";
+    category = "daypart";
+  } else if (hasHour) {
+    type = "Hourly Patterns";
+    category = "hourly";
+  } else if (hasDay) {
+    type = "Day of Week Analysis";
+    category = "daily";
+  } else if (hasMonth) {
+    type = "Monthly Trends";
+    category = "daily";
+  } else if (hasStation) {
+    type = "Daily Overview";
+    category = "daily";
+  }
+
+  return {
+    type,
+    category,
+    hasStation,
+    hasDaypart,
+    hasDevice,
+    hasHour,
+  };
 }
