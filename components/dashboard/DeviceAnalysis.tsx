@@ -19,7 +19,7 @@ interface DeviceMetrics {
   dataPoints: number;
 }
 
-const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
+const COLORS = ["#F8971D", "#32588E", "#FAB342", "#6E99BB", "#D67A0A", "#91B1CB"]; // Radio Milwaukee brand colors
 
 export default function DeviceAnalysis({ data, loading = false }: DeviceAnalysisProps) {
   const deviceData = useMemo(() => {
@@ -257,10 +257,10 @@ export default function DeviceAnalysis({ data, loading = false }: DeviceAnalysis
 
       {/* Key Insights */}
       {deviceData.length > 1 && (
-        <div className="bg-purple-900/20 border border-purple-700 rounded-lg p-4">
+        <div className="bg-radiomke-blue-500/10 border border-radiomke-blue-500/30 rounded-lg p-4">
           <div className="flex items-start gap-3">
             <svg
-              className="w-6 h-6 text-purple-400 flex-shrink-0 mt-0.5"
+              className="w-6 h-6 text-radiomke-blue-300 flex-shrink-0 mt-0.5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -273,8 +273,8 @@ export default function DeviceAnalysis({ data, loading = false }: DeviceAnalysis
               />
             </svg>
             <div>
-              <p className="text-sm font-medium text-purple-300">Key Insight</p>
-              <p className="text-xs text-purple-200 mt-1">
+              <p className="text-sm font-medium text-radiomke-blue-300">Key Insight</p>
+              <p className="text-xs text-radiomke-blue-200 mt-1">
                 {deviceData[0].device} accounts for {deviceData[0].percentage.toFixed(1)}% of
                 distribution with an average CUME of {deviceData[0].avgCume.toLocaleString()}.
                 {deviceData[0].avgTsl > 4

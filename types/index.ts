@@ -9,6 +9,7 @@ export interface RadioMetrics {
   daypart?: string;
   device?: string;
   station?: string; // Station identifier for filtering
+  hour?: number; // Hour of day (0-23) for hourly pattern analysis
   fileId?: string; // Track which file this metric came from
 }
 

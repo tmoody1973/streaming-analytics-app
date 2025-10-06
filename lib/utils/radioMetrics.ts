@@ -16,6 +16,30 @@ export function calculateAverageCUME(cumeValues: number[]): number {
 }
 
 /**
+ * Calculate Average TLH (Total Listening Hours)
+ * TLH should be AVERAGED when aggregating across time periods or groups
+ */
+export function calculateAverageTLH(tlhValues: number[]): number {
+  const validValues = tlhValues.filter((v) => !isNaN(v) && v >= 0);
+  if (validValues.length === 0) return 0;
+
+  const sum = validValues.reduce((acc, val) => acc + val, 0);
+  return Math.round(sum / validValues.length);
+}
+
+/**
+ * Calculate Average TSL (Time Spent Listening)
+ * TSL should be AVERAGED when aggregating across groups
+ */
+export function calculateAverageTSL(tslValues: number[]): number {
+  const validValues = tslValues.filter((v) => !isNaN(v) && v >= 0);
+  if (validValues.length === 0) return 0;
+
+  const sum = validValues.reduce((acc, val) => acc + val, 0);
+  return parseFloat((sum / validValues.length).toFixed(2));
+}
+
+/**
  * Calculate Time Spent Listening (TSL)
  * Formula: TSL = TLH ÷ CUME
  * TSL represents average listening duration per unique listener
@@ -111,15 +135,19 @@ export function parseTritonMetrics(csvData: any[]): RadioMetrics[] {
       const dateStr = getCellValue(row, ["Week", "Date", "date", "DATE"]);
       const date = dateStr ? new Date(dateStr) : new Date();
 
-      // Station name
+      // Station name - explicitly capture station
       const station = getCellValue(row, ["Station", "station", "STATION", "Stream"]) || undefined;
+
+      // Hour of day (0-23) for hourly pattern analysis
+      const hourStr = getCellValue(row, ["Hour of day", "Hour", "hour", "HOUR"]);
+      const hour = hourStr !== undefined ? parseInt(hourStr, 10) : undefined;
 
       // Daypart (e.g., "Morning Drive", "Midday", "Afternoon Drive")
       const daypart = getCellValue(row, ["Daypart", "daypart", "DAYPART", "Day Part"]) || undefined;
 
       // Device/Platform (e.g., "Mobile", "Desktop", "Smart Speaker")
       // Do NOT fallback to station - these are completely different categories
-      const device = getCellValue(row, ["Device", "device", "DEVICE", "Device Family", "Platform"]) || undefined;
+      const device = getCellValue(row, ["Device", "device", "DEVICE", "Device Family", "Device family", "Platform"]) || undefined;
 
       const validation = validateRadioMetrics({ cume, tlh });
 
@@ -130,6 +158,8 @@ export function parseTritonMetrics(csvData: any[]): RadioMetrics[] {
           tsl: calculateTSL(tlh, cume),
           activeSessions,
           date,
+          station,
+          hour,
           daypart,
           device,
         });

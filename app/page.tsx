@@ -12,6 +12,7 @@ import MetricsOverview from "@/components/dashboard/MetricsOverview";
 import TrendAnalysis from "@/components/dashboard/TrendAnalysis";
 import DaypartComparison from "@/components/dashboard/DaypartComparison";
 import DeviceAnalysis from "@/components/dashboard/DeviceAnalysis";
+import HourlyPatterns from "@/components/dashboard/HourlyPatterns";
 import DashboardSection from "@/components/dashboard/DashboardSection";
 
 export default function Home() {
@@ -164,11 +165,13 @@ export default function Home() {
   const dataAvailability = useMemo(() => {
     const hasDaypart = filteredData.some((m) => m.daypart);
     const hasDevice = filteredData.some((m) => m.device);
+    const hasHourly = filteredData.some((m) => m.hour !== undefined);
     const hasBasicData = filteredData.length > 0;
 
     return {
       hasDaypart,
       hasDevice,
+      hasHourly,
       hasBasicData,
     };
   }, [filteredData]);
@@ -388,6 +391,17 @@ export default function Home() {
                   requiredExport="radio_milwaukee_device_analysis.csv"
                 >
                   <DeviceAnalysis data={filteredData} />
+                </DashboardSection>
+
+                {/* Hourly Patterns - only if we have hourly data */}
+                <DashboardSection
+                  title="Hourly Listening Patterns"
+                  description="Audience patterns by hour of day"
+                  hasData={dataAvailability.hasHourly}
+                  missingDataMessage="Upload a CSV file with hourly breakdown to see peak listening times"
+                  requiredExport="radio_milwaukee_hourly_patterns.csv"
+                >
+                  <HourlyPatterns data={filteredData} />
                 </DashboardSection>
               </div>
             )}
