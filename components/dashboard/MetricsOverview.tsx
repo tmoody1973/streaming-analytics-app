@@ -121,10 +121,10 @@ export default function MetricsOverview({
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="bg-gray-800 rounded-lg p-6 animate-pulse"
+            className="bg-radiomke-charcoal-600 rounded-lg p-6 animate-pulse"
           >
-            <div className="h-4 bg-gray-700 rounded w-1/2 mb-4"></div>
-            <div className="h-8 bg-gray-700 rounded w-3/4"></div>
+            <div className="h-4 bg-radiomke-charcoal-700 rounded w-1/2 mb-4"></div>
+            <div className="h-8 bg-radiomke-charcoal-700 rounded w-3/4"></div>
           </div>
         ))}
       </div>
@@ -133,8 +133,8 @@ export default function MetricsOverview({
 
   if (data.length === 0) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6 text-center">
-        <p className="text-gray-400">
+      <div className="bg-radiomke-charcoal-600 rounded-lg p-6 text-center">
+        <p className="text-radiomke-cream-600">
           No data available. Upload CSV files to see metrics.
         </p>
       </div>
@@ -144,7 +144,7 @@ export default function MetricsOverview({
   return (
     <div className="space-y-4">
       {/* CUME Warning Banner */}
-      <div className="bg-yellow-900/20 border border-yellow-700 rounded-lg p-4">
+      <div className="bg-radiomke-orange-500/10 border border-radiomke-orange-500/30 rounded-lg p-4">
         <div className="flex items-start gap-3">
           <svg
             className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-0.5"
@@ -160,7 +160,7 @@ export default function MetricsOverview({
             />
           </svg>
           <div>
-            <p className="text-sm font-medium text-yellow-300">
+            <p className="text-sm font-medium text-radiomke-orange-300">
               Important: CUME Calculation Rule
             </p>
             <p className="text-xs text-yellow-200 mt-1">
@@ -177,7 +177,7 @@ export default function MetricsOverview({
         {cards.map((card, index) => (
           <div
             key={index}
-            className={`bg-gray-800 rounded-lg p-6 relative group hover:bg-gray-750 transition-colors ${
+            className={`bg-radiomke-charcoal-600 rounded-lg p-6 relative group hover:bg-gray-750 transition-colors ${
               card.isAverage ? "border-2 border-yellow-600" : ""
             }`}
           >
@@ -185,7 +185,7 @@ export default function MetricsOverview({
             <div className="absolute top-2 right-2">
               <div className="relative">
                 <svg
-                  className="w-5 h-5 text-gray-400 cursor-help"
+                  className="w-5 h-5 text-radiomke-cream-600 cursor-help"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -197,14 +197,14 @@ export default function MetricsOverview({
                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <div className="absolute right-0 top-6 w-64 p-3 bg-gray-900 border border-gray-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                  <p className="text-xs text-gray-300">{card.tooltip}</p>
+                <div className="absolute right-0 top-6 w-64 p-3 bg-radiomke-charcoal-700 border border-radiomke-charcoal-400/30 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                  <p className="text-xs text-radiomke-cream-500">{card.tooltip}</p>
                 </div>
               </div>
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-gray-400 flex items-center gap-2">
+              <h3 className="text-sm font-medium text-radiomke-cream-600 flex items-center gap-2">
                 {card.title}
                 {card.isAverage && (
                   <span className="text-xs bg-yellow-600 text-yellow-100 px-2 py-0.5 rounded">
@@ -214,9 +214,9 @@ export default function MetricsOverview({
               </h3>
 
               <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-bold text-white">{card.value}</p>
+                <p className="text-3xl font-bold text-radiomke-cream-500">{card.value}</p>
                 {card.unit && (
-                  <span className="text-sm text-gray-400">{card.unit}</span>
+                  <span className="text-sm text-radiomke-cream-600">{card.unit}</span>
                 )}
               </div>
 
@@ -257,7 +257,7 @@ export default function MetricsOverview({
                         ? "text-green-400"
                         : card.change < 0
                         ? "text-red-400"
-                        : "text-gray-400"
+                        : "text-radiomke-cream-600"
                     }`}
                   >
                     {card.change > 0 ? "+" : ""}
@@ -272,14 +272,14 @@ export default function MetricsOverview({
       </div>
 
       {/* Data Quality Indicator */}
-      <div className="flex items-center justify-between bg-gray-800 rounded-lg p-4">
+      <div className="flex items-center justify-between bg-radiomke-charcoal-600 rounded-lg p-4">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-          <span className="text-sm text-gray-300">
-            Data Quality: <span className="font-semibold text-white">Good</span>
+          <span className="text-sm text-radiomke-cream-500">
+            Data Quality: <span className="font-semibold text-radiomke-cream-500">Good</span>
           </span>
         </div>
-        <div className="text-sm text-gray-400">
+        <div className="text-sm text-radiomke-cream-600">
           {data.length} data points analyzed
         </div>
       </div>

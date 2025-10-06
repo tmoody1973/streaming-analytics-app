@@ -180,20 +180,16 @@ export default function Home() {
   });
 
   return (
-    <div className="min-h-screen bg-radiomke-charcoal-500">
+    <div className="min-h-screen bg-gray-900">
       {/* Header */}
-      <header className="bg-radiomke-charcoal-600 border-b border-radiomke-charcoal-400/30">
+      <header className="bg-gray-800 border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="flex items-center gap-4">
-              <img
-                src="/images/RadioMilwaukeeLogos_HorizontalLockup_CreamOrange.png"
-                alt="Radio Milwaukee"
-                className="h-12 w-auto"
-              />
-              <div className="border-l border-radiomke-charcoal-400/50 pl-4">
-                <p className="text-sm text-radiomke-cream-600">Streaming Analytics Platform</p>
-              </div>
+            <div>
+              <h1 className="text-2xl font-bold text-white">
+                Radio Milwaukee
+              </h1>
+              <p className="text-sm text-gray-400">Streaming Analytics Platform</p>
             </div>
             <div className="flex items-center gap-3">
               {/* Date Range Filter */}
@@ -202,7 +198,7 @@ export default function Home() {
                   <select
                     value={dateRange}
                     onChange={(e) => setDateRange(e.target.value)}
-                    className="bg-radiomke-charcoal-700 text-radiomke-cream-500 text-sm rounded-lg px-3 py-2 border border-radiomke-charcoal-400/50 focus:ring-2 focus:ring-radiomke-orange-500 focus:border-transparent"
+                    className="bg-gray-700 text-white text-sm rounded-lg px-3 py-2 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="all">All Time</option>
                     <option value="7d">Last 7 Days</option>
@@ -217,7 +213,7 @@ export default function Home() {
                     <select
                       value={selectedStation}
                       onChange={(e) => setSelectedStation(e.target.value)}
-                      className="bg-radiomke-charcoal-700 text-radiomke-cream-500 text-sm rounded-lg px-3 py-2 border border-radiomke-charcoal-400/50 focus:ring-2 focus:ring-radiomke-orange-500 focus:border-transparent"
+                      className="bg-gray-700 text-white text-sm rounded-lg px-3 py-2 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                       <option value="all">All Stations</option>
                       {availableStations.map((station) => (
@@ -231,7 +227,7 @@ export default function Home() {
                   {/* Clear All Data Button */}
                   <button
                     onClick={handleClearAllData}
-                    className="bg-red-600 hover:bg-red-700 text-radiomke-cream-500 text-sm font-medium px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+                    className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
                     title="Clear all uploaded data"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -242,7 +238,7 @@ export default function Home() {
                 </>
               )}
 
-              <span className="text-sm text-radiomke-cream-600">
+              <span className="text-sm text-gray-400">
                 Last Updated: {mounted ? dataContext.lastUpdated.toLocaleString() : "Loading..."}
               </span>
             </div>
@@ -253,35 +249,35 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex">
         {/* Sidebar Navigation */}
-        <aside className="w-64 bg-radiomke-charcoal-600 min-h-screen border-r border-radiomke-charcoal-400/30">
+        <aside className="w-64 bg-gray-800 min-h-screen border-r border-gray-700">
           <nav className="p-4 space-y-2">
             <a
               href="#dashboard"
-              className="block px-4 py-2 rounded-lg text-radiomke-cream-500 bg-radiomke-orange-500 hover:bg-radiomke-orange-600 transition-colors"
+              className="block px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors"
             >
               Dashboard
             </a>
             <a
               href="#upload"
-              className="block px-4 py-2 rounded-lg text-radiomke-cream-500 hover:bg-radiomke-charcoal-700 transition-colors"
+              className="block px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors"
             >
               Upload Data
             </a>
             <a
               href="#trends"
-              className="block px-4 py-2 rounded-lg text-radiomke-cream-500 hover:bg-radiomke-charcoal-700 transition-colors"
+              className="block px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors"
             >
               Trend Analysis
             </a>
             <a
               href="#nielsen"
-              className="block px-4 py-2 rounded-lg text-radiomke-cream-500 hover:bg-radiomke-charcoal-700 transition-colors"
+              className="block px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors"
             >
               Nielsen Integration
             </a>
             <a
               href="#demographics"
-              className="block px-4 py-2 rounded-lg text-radiomke-cream-500 hover:bg-radiomke-charcoal-700 transition-colors"
+              className="block px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors"
             >
               Demographics
             </a>
@@ -292,49 +288,49 @@ export default function Home() {
         <main className="flex-1 p-8">
           <div className="max-w-7xl mx-auto">
             {/* Welcome Section */}
-            <div className="bg-radiomke-charcoal-600 rounded-lg p-6 mb-6">
-              <h2 className="text-xl font-bold text-radiomke-cream-500 mb-2">
+            <div className="bg-gray-800 rounded-lg p-6 mb-6">
+              <h2 className="text-xl font-bold text-white mb-2">
                 Welcome to Radio Milwaukee Analytics
               </h2>
-              <p className="text-radiomke-cream-500 mb-4">
+              <p className="text-gray-300 mb-4">
                 Analyze streaming metrics from Triton Webcast and correlate with Nielsen ratings data.
                 Upload your CSV files to get started, or use the AI assistant to ask questions about your data.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-                <div className="bg-radiomke-charcoal-700 rounded-lg p-4">
-                  <h3 className="text-radiomke-cream-500 font-semibold mb-1">Uploaded Files</h3>
-                  <p className="text-3xl font-bold text-radiomke-orange-400">
+                <div className="bg-gray-700 rounded-lg p-4">
+                  <h3 className="text-white font-semibold mb-1">Uploaded Files</h3>
+                  <p className="text-3xl font-bold text-blue-400">
                     {dataContext.uploadedFiles.length}
                   </p>
-                  <p className="text-xs text-radiomke-cream-600 mt-1">of 22 possible exports</p>
+                  <p className="text-xs text-gray-400 mt-1">of 22 possible exports</p>
                 </div>
-                <div className="bg-radiomke-charcoal-700 rounded-lg p-4 border border-radiomke-blue-500/20">
-                  <h3 className="text-radiomke-cream-500 font-semibold mb-1">Total Records</h3>
-                  <p className="text-3xl font-bold text-radiomke-blue-400">
+                <div className="bg-gray-700 rounded-lg p-4">
+                  <h3 className="text-white font-semibold mb-1">Total Records</h3>
+                  <p className="text-3xl font-bold text-green-400">
                     {dataContext.streamingData.length.toLocaleString()}
                   </p>
-                  <p className="text-xs text-radiomke-cream-600 mt-1">all time</p>
+                  <p className="text-xs text-gray-400 mt-1">all time</p>
                 </div>
-                <div className="bg-radiomke-charcoal-700 rounded-lg p-4 border border-radiomke-blue-500/20">
-                  <h3 className="text-radiomke-cream-500 font-semibold mb-1">Filtered View</h3>
-                  <p className="text-3xl font-bold text-radiomke-blue-300">
+                <div className="bg-gray-700 rounded-lg p-4">
+                  <h3 className="text-white font-semibold mb-1">Filtered View</h3>
+                  <p className="text-3xl font-bold text-purple-400">
                     {filteredData.length.toLocaleString()}
                   </p>
-                  <p className="text-xs text-radiomke-cream-600 mt-1">current filter</p>
+                  <p className="text-xs text-gray-400 mt-1">current filter</p>
                 </div>
-                <div className="bg-radiomke-charcoal-700 rounded-lg p-4 border border-radiomke-orange-500/20">
-                  <h3 className="text-radiomke-cream-500 font-semibold mb-1">Status</h3>
-                  <p className="text-lg font-semibold text-radiomke-orange-400">
+                <div className="bg-gray-700 rounded-lg p-4">
+                  <h3 className="text-white font-semibold mb-1">Status</h3>
+                  <p className="text-lg font-semibold text-yellow-400">
                     Ready
                   </p>
-                  <p className="text-xs text-radiomke-cream-600 mt-1">data persists on refresh</p>
+                  <p className="text-xs text-gray-400 mt-1">data persists on refresh</p>
                 </div>
               </div>
             </div>
 
             {/* Upload Section */}
-            <div className="bg-radiomke-charcoal-600 rounded-lg p-6 mb-6">
-              <h3 className="text-lg font-semibold text-radiomke-cream-500 mb-4">
+            <div className="bg-gray-800 rounded-lg p-6 mb-6">
+              <h3 className="text-lg font-semibold text-white mb-4">
                 Upload Triton or Nielsen Data
               </h3>
               <FileUploader

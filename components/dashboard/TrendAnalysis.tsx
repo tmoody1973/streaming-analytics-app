@@ -95,10 +95,10 @@ export default function TrendAnalysis({ data, loading = false }: TrendAnalysisPr
 
   if (loading) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-radiomke-charcoal-600 rounded-lg p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-gray-700 rounded w-1/4"></div>
-          <div className="h-64 bg-gray-700 rounded"></div>
+          <div className="h-6 bg-radiomke-charcoal-700 rounded w-1/4"></div>
+          <div className="h-64 bg-radiomke-charcoal-700 rounded"></div>
         </div>
       </div>
     );
@@ -106,8 +106,8 @@ export default function TrendAnalysis({ data, loading = false }: TrendAnalysisPr
 
   if (data.length === 0) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6 text-center">
-        <p className="text-gray-400">
+      <div className="bg-radiomke-charcoal-600 rounded-lg p-6 text-center">
+        <p className="text-radiomke-cream-600">
           No data available for trend analysis. Upload CSV files to see trends.
         </p>
       </div>
@@ -115,25 +115,25 @@ export default function TrendAnalysis({ data, loading = false }: TrendAnalysisPr
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 space-y-4">
+    <div className="bg-radiomke-charcoal-600 rounded-lg p-6 space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-white">Trend Analysis</h2>
-          <p className="text-sm text-gray-400 mt-1">Weekly performance trends</p>
+          <h2 className="text-xl font-bold text-radiomke-cream-500">Trend Analysis</h2>
+          <p className="text-sm text-radiomke-cream-600 mt-1">Weekly performance trends</p>
         </div>
 
         <div className="flex flex-wrap gap-2">
           {/* Metric Selection */}
-          <div className="flex bg-gray-700 rounded-lg p-1">
+          <div className="flex bg-radiomke-charcoal-700 rounded-lg p-1">
             {(["cume", "tlh", "tsl"] as const).map((metric) => (
               <button
                 key={metric}
                 onClick={() => setSelectedMetric(metric)}
                 className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
                   selectedMetric === metric
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-300 hover:text-white"
+                    ? "bg-radiomke-orange-500 text-radiomke-cream-500"
+                    : "text-radiomke-cream-500 hover:text-radiomke-cream-500"
                 }`}
               >
                 {metric.toUpperCase()}
@@ -142,13 +142,13 @@ export default function TrendAnalysis({ data, loading = false }: TrendAnalysisPr
           </div>
 
           {/* Chart Type Toggle */}
-          <div className="flex bg-gray-700 rounded-lg p-1">
+          <div className="flex bg-radiomke-charcoal-700 rounded-lg p-1">
             <button
               onClick={() => setChartType("line")}
               className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
                 chartType === "line"
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-300 hover:text-white"
+                  ? "bg-radiomke-orange-500 text-radiomke-cream-500"
+                  : "text-radiomke-cream-500 hover:text-radiomke-cream-500"
               }`}
             >
               Line
@@ -157,8 +157,8 @@ export default function TrendAnalysis({ data, loading = false }: TrendAnalysisPr
               onClick={() => setChartType("bar")}
               className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
                 chartType === "bar"
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-300 hover:text-white"
+                  ? "bg-radiomke-orange-500 text-radiomke-cream-500"
+                  : "text-radiomke-cream-500 hover:text-radiomke-cream-500"
               }`}
             >
               Bar
@@ -168,17 +168,17 @@ export default function TrendAnalysis({ data, loading = false }: TrendAnalysisPr
       </div>
 
       {/* Metric Info Banner */}
-      <div className="bg-gray-700 rounded-lg p-3">
+      <div className="bg-radiomke-charcoal-700 rounded-lg p-3">
         <div className="flex items-center gap-2">
           <div
             className="w-3 h-3 rounded-full"
             style={{ backgroundColor: currentConfig.color }}
           ></div>
-          <span className="text-sm font-medium text-white">
+          <span className="text-sm font-medium text-radiomke-cream-500">
             {currentConfig.name}
           </span>
-          <span className="text-xs text-gray-400">•</span>
-          <span className="text-xs text-gray-400">{currentConfig.warning}</span>
+          <span className="text-xs text-radiomke-cream-600">•</span>
+          <span className="text-xs text-radiomke-cream-600">{currentConfig.warning}</span>
         </div>
       </div>
 
@@ -248,10 +248,10 @@ export default function TrendAnalysis({ data, loading = false }: TrendAnalysisPr
       </div>
 
       {/* Stats Summary */}
-      <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-700">
+      <div className="grid grid-cols-3 gap-4 pt-4 border-t border-radiomke-charcoal-400/30">
         <div>
-          <p className="text-xs text-gray-400 mb-1">Average</p>
-          <p className="text-lg font-semibold text-white">
+          <p className="text-xs text-radiomke-cream-600 mb-1">Average</p>
+          <p className="text-lg font-semibold text-radiomke-cream-500">
             {chartData.length > 0
               ? Math.round(
                   chartData.reduce((sum, d) => sum + (d[selectedMetric] || 0), 0) /
@@ -262,8 +262,8 @@ export default function TrendAnalysis({ data, loading = false }: TrendAnalysisPr
           </p>
         </div>
         <div>
-          <p className="text-xs text-gray-400 mb-1">Peak</p>
-          <p className="text-lg font-semibold text-white">
+          <p className="text-xs text-radiomke-cream-600 mb-1">Peak</p>
+          <p className="text-lg font-semibold text-radiomke-cream-500">
             {chartData.length > 0
               ? Math.max(...chartData.map((d) => d[selectedMetric] || 0)).toLocaleString()
               : "0"}
@@ -271,8 +271,8 @@ export default function TrendAnalysis({ data, loading = false }: TrendAnalysisPr
           </p>
         </div>
         <div>
-          <p className="text-xs text-gray-400 mb-1">Data Points</p>
-          <p className="text-lg font-semibold text-white">{chartData.length}</p>
+          <p className="text-xs text-radiomke-cream-600 mb-1">Data Points</p>
+          <p className="text-lg font-semibold text-radiomke-cream-500">{chartData.length}</p>
         </div>
       </div>
     </div>

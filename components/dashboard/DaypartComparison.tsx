@@ -60,10 +60,10 @@ export default function DaypartComparison({ data, loading = false }: DaypartComp
 
   if (loading) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-radiomke-charcoal-600 rounded-lg p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-gray-700 rounded w-1/3"></div>
-          <div className="h-64 bg-gray-700 rounded"></div>
+          <div className="h-6 bg-radiomke-charcoal-700 rounded w-1/3"></div>
+          <div className="h-64 bg-radiomke-charcoal-700 rounded"></div>
         </div>
       </div>
     );
@@ -71,8 +71,8 @@ export default function DaypartComparison({ data, loading = false }: DaypartComp
 
   if (data.length === 0 || daypartData.length === 0) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6 text-center">
-        <p className="text-gray-400">
+      <div className="bg-radiomke-charcoal-600 rounded-lg p-6 text-center">
+        <p className="text-radiomke-cream-600">
           No daypart data available. Upload CSV files with daypart information.
         </p>
       </div>
@@ -80,11 +80,11 @@ export default function DaypartComparison({ data, loading = false }: DaypartComp
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 space-y-6">
+    <div className="bg-radiomke-charcoal-600 rounded-lg p-6 space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-white">Daypart Performance</h2>
-        <p className="text-sm text-gray-400 mt-1">
+        <h2 className="text-xl font-bold text-radiomke-cream-500">Daypart Performance</h2>
+        <p className="text-sm text-radiomke-cream-600 mt-1">
           Comparison across different time periods
         </p>
       </div>
@@ -111,10 +111,10 @@ export default function DaypartComparison({ data, loading = false }: DaypartComp
                 Best Performing
               </span>
             </div>
-            <p className="text-2xl font-bold text-white mb-1">
+            <p className="text-2xl font-bold text-radiomke-cream-500 mb-1">
               {bestPerforming.daypart}
             </p>
-            <p className="text-sm text-gray-300">
+            <p className="text-sm text-radiomke-cream-500">
               Avg CUME: {bestPerforming.avgCume.toLocaleString()}
             </p>
           </div>
@@ -138,10 +138,10 @@ export default function DaypartComparison({ data, loading = false }: DaypartComp
                 Needs Attention
               </span>
             </div>
-            <p className="text-2xl font-bold text-white mb-1">
+            <p className="text-2xl font-bold text-radiomke-cream-500 mb-1">
               {worstPerforming.daypart}
             </p>
-            <p className="text-sm text-gray-300">
+            <p className="text-sm text-radiomke-cream-500">
               Avg CUME: {worstPerforming.avgCume.toLocaleString()}
             </p>
           </div>
@@ -179,21 +179,21 @@ export default function DaypartComparison({ data, loading = false }: DaypartComp
       {/* Detailed Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-700">
+          <thead className="bg-radiomke-charcoal-700">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-radiomke-cream-500 uppercase tracking-wider">
                 Daypart
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-medium text-radiomke-cream-500 uppercase tracking-wider">
                 Avg CUME
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-medium text-radiomke-cream-500 uppercase tracking-wider">
                 Total TLH
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-medium text-radiomke-cream-500 uppercase tracking-wider">
                 Avg TSL
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-medium text-radiomke-cream-500 uppercase tracking-wider">
                 Data Points
               </th>
             </tr>
@@ -202,7 +202,7 @@ export default function DaypartComparison({ data, loading = false }: DaypartComp
             {daypartData.map((daypart, index) => (
               <tr
                 key={daypart.daypart}
-                className={`hover:bg-gray-700/50 transition-colors ${
+                className={`hover:bg-radiomke-charcoal-700/50 transition-colors ${
                   index === 0
                     ? "bg-green-900/10"
                     : index === daypartData.length - 1
@@ -210,19 +210,19 @@ export default function DaypartComparison({ data, loading = false }: DaypartComp
                     : ""
                 }`}
               >
-                <td className="px-4 py-3 font-medium text-white">
+                <td className="px-4 py-3 font-medium text-radiomke-cream-500">
                   {daypart.daypart}
                 </td>
-                <td className="px-4 py-3 text-right text-gray-300">
+                <td className="px-4 py-3 text-right text-radiomke-cream-500">
                   {daypart.avgCume.toLocaleString()}
                 </td>
-                <td className="px-4 py-3 text-right text-gray-300">
+                <td className="px-4 py-3 text-right text-radiomke-cream-500">
                   {daypart.totalTlh.toLocaleString()}
                 </td>
-                <td className="px-4 py-3 text-right text-gray-300">
+                <td className="px-4 py-3 text-right text-radiomke-cream-500">
                   {daypart.avgTsl.toFixed(2)}
                 </td>
-                <td className="px-4 py-3 text-right text-gray-400">
+                <td className="px-4 py-3 text-right text-radiomke-cream-600">
                   {daypart.dataPoints}
                 </td>
               </tr>
@@ -235,7 +235,7 @@ export default function DaypartComparison({ data, loading = false }: DaypartComp
       <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-4">
         <div className="flex items-start gap-3">
           <svg
-            className="w-6 h-6 text-blue-400 flex-shrink-0 mt-0.5"
+            className="w-6 h-6 text-radiomke-blue-400 flex-shrink-0 mt-0.5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

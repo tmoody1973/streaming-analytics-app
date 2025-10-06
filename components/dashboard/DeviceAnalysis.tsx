@@ -70,10 +70,10 @@ export default function DeviceAnalysis({ data, loading = false }: DeviceAnalysis
 
   if (loading) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6">
+      <div className="bg-radiomke-charcoal-600 rounded-lg p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-gray-700 rounded w-1/3"></div>
-          <div className="h-64 bg-gray-700 rounded"></div>
+          <div className="h-6 bg-radiomke-charcoal-700 rounded w-1/3"></div>
+          <div className="h-64 bg-radiomke-charcoal-700 rounded"></div>
         </div>
       </div>
     );
@@ -81,8 +81,8 @@ export default function DeviceAnalysis({ data, loading = false }: DeviceAnalysis
 
   if (data.length === 0 || deviceData.length === 0) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6 text-center">
-        <p className="text-gray-400">
+      <div className="bg-radiomke-charcoal-600 rounded-lg p-6 text-center">
+        <p className="text-radiomke-cream-600">
           No device data available. Upload CSV files with device information.
         </p>
       </div>
@@ -90,11 +90,11 @@ export default function DeviceAnalysis({ data, loading = false }: DeviceAnalysis
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 space-y-6">
+    <div className="bg-radiomke-charcoal-600 rounded-lg p-6 space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-white">Device Distribution</h2>
-        <p className="text-sm text-gray-400 mt-1">
+        <h2 className="text-xl font-bold text-radiomke-cream-500">Device Distribution</h2>
+        <p className="text-sm text-radiomke-cream-600 mt-1">
           Listener breakdown by platform/station
         </p>
       </div>
@@ -142,7 +142,7 @@ export default function DeviceAnalysis({ data, loading = false }: DeviceAnalysis
           {deviceData.slice(0, 5).map((device, index) => (
             <div
               key={device.device}
-              className="bg-gray-700 rounded-lg p-4 hover:bg-gray-650 transition-colors"
+              className="bg-radiomke-charcoal-700 rounded-lg p-4 hover:bg-gray-650 transition-colors"
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
@@ -150,28 +150,28 @@ export default function DeviceAnalysis({ data, loading = false }: DeviceAnalysis
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: COLORS[index % COLORS.length] }}
                   ></div>
-                  <span className="font-medium text-white">{device.device}</span>
+                  <span className="font-medium text-radiomke-cream-500">{device.device}</span>
                 </div>
-                <span className="text-sm text-gray-400">
+                <span className="text-sm text-radiomke-cream-600">
                   {device.percentage.toFixed(1)}%
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-2 text-xs">
                 <div>
-                  <p className="text-gray-400">Avg CUME</p>
-                  <p className="text-white font-semibold">
+                  <p className="text-radiomke-cream-600">Avg CUME</p>
+                  <p className="text-radiomke-cream-500 font-semibold">
                     {device.avgCume.toLocaleString()}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-400">Total TLH</p>
-                  <p className="text-white font-semibold">
+                  <p className="text-radiomke-cream-600">Total TLH</p>
+                  <p className="text-radiomke-cream-500 font-semibold">
                     {device.totalTlh.toLocaleString()}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-400">Avg TSL</p>
-                  <p className="text-white font-semibold">
+                  <p className="text-radiomke-cream-600">Avg TSL</p>
+                  <p className="text-radiomke-cream-500 font-semibold">
                     {device.avgTsl.toFixed(2)}
                   </p>
                 </div>
@@ -179,7 +179,7 @@ export default function DeviceAnalysis({ data, loading = false }: DeviceAnalysis
             </div>
           ))}
           {deviceData.length > 5 && (
-            <p className="text-sm text-gray-400 text-center">
+            <p className="text-sm text-radiomke-cream-600 text-center">
               +{deviceData.length - 5} more devices
             </p>
           )}
@@ -189,37 +189,37 @@ export default function DeviceAnalysis({ data, loading = false }: DeviceAnalysis
       {/* Detailed Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-700">
+          <thead className="bg-radiomke-charcoal-700">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-radiomke-cream-500 uppercase tracking-wider">
                 Device/Station
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-medium text-radiomke-cream-500 uppercase tracking-wider">
                 Distribution
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-medium text-radiomke-cream-500 uppercase tracking-wider">
                 Avg CUME
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-medium text-radiomke-cream-500 uppercase tracking-wider">
                 Total TLH
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-medium text-radiomke-cream-500 uppercase tracking-wider">
                 Avg TSL
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-medium text-radiomke-cream-500 uppercase tracking-wider">
                 Data Points
               </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700">
             {deviceData.map((device, index) => (
-              <tr key={device.device} className="hover:bg-gray-700/50 transition-colors">
+              <tr key={device.device} className="hover:bg-radiomke-charcoal-700/50 transition-colors">
                 <td className="px-4 py-3 flex items-center gap-2">
                   <div
                     className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: COLORS[index % COLORS.length] }}
                   ></div>
-                  <span className="font-medium text-white">{device.device}</span>
+                  <span className="font-medium text-radiomke-cream-500">{device.device}</span>
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">
@@ -232,21 +232,21 @@ export default function DeviceAnalysis({ data, loading = false }: DeviceAnalysis
                         }}
                       ></div>
                     </div>
-                    <span className="text-gray-300 w-12">
+                    <span className="text-radiomke-cream-500 w-12">
                       {device.percentage.toFixed(1)}%
                     </span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-right text-gray-300">
+                <td className="px-4 py-3 text-right text-radiomke-cream-500">
                   {device.avgCume.toLocaleString()}
                 </td>
-                <td className="px-4 py-3 text-right text-gray-300">
+                <td className="px-4 py-3 text-right text-radiomke-cream-500">
                   {device.totalTlh.toLocaleString()}
                 </td>
-                <td className="px-4 py-3 text-right text-gray-300">
+                <td className="px-4 py-3 text-right text-radiomke-cream-500">
                   {device.avgTsl.toFixed(2)}
                 </td>
-                <td className="px-4 py-3 text-right text-gray-400">
+                <td className="px-4 py-3 text-right text-radiomke-cream-600">
                   {device.dataPoints}
                 </td>
               </tr>

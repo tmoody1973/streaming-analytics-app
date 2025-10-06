@@ -42,35 +42,35 @@ export default function DataSummary({
   const uniqueDevices = [...new Set(metricsData.map((m) => m.device).filter(Boolean))];
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 space-y-6">
+    <div className="bg-radiomke-charcoal-600 rounded-lg p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-white">Data Summary</h3>
-        <span className="text-sm text-gray-400">
+        <h3 className="text-lg font-semibold text-radiomke-cream-500">Data Summary</h3>
+        <span className="text-sm text-radiomke-cream-600">
           {successfulFiles} of {uploadedFiles.length} files processed
         </span>
       </div>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-gray-700 rounded-lg p-4">
-          <p className="text-xs text-gray-400 mb-1">Total Records</p>
-          <p className="text-2xl font-bold text-white">{totalRecords.toLocaleString()}</p>
+        <div className="bg-radiomke-charcoal-700 rounded-lg p-4">
+          <p className="text-xs text-radiomke-cream-600 mb-1">Total Records</p>
+          <p className="text-2xl font-bold text-radiomke-cream-500">{totalRecords.toLocaleString()}</p>
         </div>
-        <div className="bg-gray-700 rounded-lg p-4">
-          <p className="text-xs text-gray-400 mb-1">Avg CUME</p>
-          <p className="text-2xl font-bold text-blue-400">{avgCume.toLocaleString()}</p>
+        <div className="bg-radiomke-charcoal-700 rounded-lg p-4">
+          <p className="text-xs text-radiomke-cream-600 mb-1">Avg CUME</p>
+          <p className="text-2xl font-bold text-radiomke-blue-400">{avgCume.toLocaleString()}</p>
           <p className="text-xs text-gray-500 mt-1">Averaged, not summed</p>
         </div>
-        <div className="bg-gray-700 rounded-lg p-4">
-          <p className="text-xs text-gray-400 mb-1">Total TLH</p>
+        <div className="bg-radiomke-charcoal-700 rounded-lg p-4">
+          <p className="text-xs text-radiomke-cream-600 mb-1">Total TLH</p>
           <p className="text-2xl font-bold text-green-400">
             {Math.round(totalTlh).toLocaleString()}
           </p>
           <p className="text-xs text-gray-500 mt-1">Hours</p>
         </div>
-        <div className="bg-gray-700 rounded-lg p-4">
-          <p className="text-xs text-gray-400 mb-1">Date Range</p>
-          <p className="text-sm font-semibold text-white">
+        <div className="bg-radiomke-charcoal-700 rounded-lg p-4">
+          <p className="text-xs text-radiomke-cream-600 mb-1">Date Range</p>
+          <p className="text-sm font-semibold text-radiomke-cream-500">
             {minDate && maxDate
               ? `${minDate.toLocaleDateString()} - ${maxDate.toLocaleDateString()}`
               : "N/A"}
@@ -85,19 +85,19 @@ export default function DataSummary({
       {(uniqueDayparts.length > 0 || uniqueDevices.length > 0) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {uniqueDayparts.length > 0 && (
-            <div className="bg-gray-700 rounded-lg p-4">
-              <p className="text-sm font-semibold text-white mb-2">Dayparts ({uniqueDayparts.length})</p>
+            <div className="bg-radiomke-charcoal-700 rounded-lg p-4">
+              <p className="text-sm font-semibold text-radiomke-cream-500 mb-2">Dayparts ({uniqueDayparts.length})</p>
               <div className="flex flex-wrap gap-2">
                 {uniqueDayparts.slice(0, 5).map((daypart) => (
                   <span
                     key={daypart}
-                    className="px-2 py-1 bg-gray-600 rounded text-xs text-gray-300"
+                    className="px-2 py-1 bg-gray-600 rounded text-xs text-radiomke-cream-500"
                   >
                     {daypart}
                   </span>
                 ))}
                 {uniqueDayparts.length > 5 && (
-                  <span className="px-2 py-1 bg-gray-600 rounded text-xs text-gray-400">
+                  <span className="px-2 py-1 bg-gray-600 rounded text-xs text-radiomke-cream-600">
                     +{uniqueDayparts.length - 5} more
                   </span>
                 )}
@@ -106,19 +106,19 @@ export default function DataSummary({
           )}
 
           {uniqueDevices.length > 0 && (
-            <div className="bg-gray-700 rounded-lg p-4">
-              <p className="text-sm font-semibold text-white mb-2">Devices ({uniqueDevices.length})</p>
+            <div className="bg-radiomke-charcoal-700 rounded-lg p-4">
+              <p className="text-sm font-semibold text-radiomke-cream-500 mb-2">Devices ({uniqueDevices.length})</p>
               <div className="flex flex-wrap gap-2">
                 {uniqueDevices.slice(0, 5).map((device) => (
                   <span
                     key={device}
-                    className="px-2 py-1 bg-gray-600 rounded text-xs text-gray-300"
+                    className="px-2 py-1 bg-gray-600 rounded text-xs text-radiomke-cream-500"
                   >
                     {device}
                   </span>
                 ))}
                 {uniqueDevices.length > 5 && (
-                  <span className="px-2 py-1 bg-gray-600 rounded text-xs text-gray-400">
+                  <span className="px-2 py-1 bg-gray-600 rounded text-xs text-radiomke-cream-600">
                     +{uniqueDevices.length - 5} more
                   </span>
                 )}
@@ -130,11 +130,11 @@ export default function DataSummary({
 
       {/* File List */}
       <div className="space-y-2">
-        <h4 className="text-sm font-semibold text-gray-400">Uploaded Files</h4>
+        <h4 className="text-sm font-semibold text-radiomke-cream-600">Uploaded Files</h4>
         {uploadedFiles.map((file) => (
           <div
             key={file.id}
-            className="flex items-center justify-between bg-gray-700 rounded-lg p-3"
+            className="flex items-center justify-between bg-radiomke-charcoal-700 rounded-lg p-3"
           >
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
@@ -147,19 +147,19 @@ export default function DataSummary({
                       : "bg-yellow-500"
                   }`}
                 />
-                <p className="text-sm font-medium text-white truncate">{file.name}</p>
+                <p className="text-sm font-medium text-radiomke-cream-500 truncate">{file.name}</p>
               </div>
               <div className="flex items-center gap-4 mt-1">
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-radiomke-cream-600">
                   {file.recordCount.toLocaleString()} records
                 </span>
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-radiomke-cream-600">
                   {file.uploadedAt.toLocaleString()}
                 </span>
                 <span
                   className={`text-xs px-2 py-0.5 rounded ${
                     file.type === "triton"
-                      ? "bg-blue-600 text-blue-100"
+                      ? "bg-radiomke-orange-500 text-blue-100"
                       : "bg-purple-600 text-purple-100"
                   }`}
                 >
@@ -173,7 +173,7 @@ export default function DataSummary({
             {onRemoveFile && (
               <button
                 onClick={() => onRemoveFile(file.id)}
-                className="ml-4 text-gray-400 hover:text-red-400 transition-colors"
+                className="ml-4 text-radiomke-cream-600 hover:text-red-400 transition-colors"
                 title="Remove file"
               >
                 <svg

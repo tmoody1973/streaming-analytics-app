@@ -164,10 +164,10 @@ export default function FileUploader({ onFilesUploaded, onError, showInstruction
     <div className="w-full space-y-4">
       {/* Help Instructions Toggle */}
       {showInstructions && (
-        <div className="flex items-center justify-between bg-gray-800 rounded-lg p-4">
+        <div className="flex items-center justify-between bg-radiomke-charcoal-600 rounded-lg p-4 border border-radiomke-charcoal-400/30">
           <div className="flex items-center gap-3">
             <svg
-              className="w-6 h-6 text-blue-400"
+              className="w-6 h-6 text-radiomke-blue-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -180,13 +180,13 @@ export default function FileUploader({ onFilesUploaded, onError, showInstruction
               />
             </svg>
             <div>
-              <h3 className="text-sm font-semibold text-white">Need help getting your CSV files?</h3>
-              <p className="text-xs text-gray-400">Learn how to export data from Triton Webcast Metrics</p>
+              <h3 className="text-sm font-semibold text-radiomke-cream-500">Need help getting your CSV files?</h3>
+              <p className="text-xs text-radiomke-cream-600">Learn how to export data from Triton Webcast Metrics</p>
             </div>
           </div>
           <button
             onClick={() => setShowHelp(!showHelp)}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+            className="px-4 py-2 bg-radiomke-orange-500 hover:bg-radiomke-orange-600 text-radiomke-cream-500 text-sm font-medium rounded-lg transition-colors"
           >
             {showHelp ? 'Hide Guide' : 'Show Guide'}
           </button>
@@ -195,96 +195,96 @@ export default function FileUploader({ onFilesUploaded, onError, showInstruction
 
       {/* Expandable Help Section */}
       {showHelp && showInstructions && (
-        <div className="bg-gray-800 rounded-lg p-6 space-y-6 border border-gray-700">
+        <div className="bg-radiomke-charcoal-600 rounded-lg p-6 space-y-6 border border-radiomke-charcoal-400/30">
           <div>
-            <h3 className="text-lg font-bold text-white mb-4">How to Export CSV Files from Triton</h3>
+            <h3 className="text-lg font-bold text-radiomke-cream-500 mb-4">How to Export CSV Files from Triton</h3>
 
             {/* Step-by-step guide */}
             <div className="space-y-4">
               <div className="flex gap-3">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                <div className="flex-shrink-0 w-8 h-8 bg-radiomke-orange-500 rounded-full flex items-center justify-center text-radiomke-cream-500 font-bold text-sm">
                   1
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-white font-semibold mb-1">Log into Triton Webcast Metrics</h4>
-                  <p className="text-sm text-gray-400">Access your Triton account and navigate to the Explore or Reports section</p>
+                  <h4 className="text-radiomke-cream-500 font-semibold mb-1">Log into Triton Webcast Metrics</h4>
+                  <p className="text-sm text-radiomke-cream-600">Access your Triton account and navigate to the Explore or Reports section</p>
                 </div>
               </div>
 
               <div className="flex gap-3">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                <div className="flex-shrink-0 w-8 h-8 bg-radiomke-orange-500 rounded-full flex items-center justify-center text-radiomke-cream-500 font-bold text-sm">
                   2
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-white font-semibold mb-1">Select Your Date Range</h4>
-                  <p className="text-sm text-gray-400">We recommend <strong className="text-white">last 18 months</strong> for comprehensive trend analysis</p>
+                  <h4 className="text-radiomke-cream-500 font-semibold mb-1">Select Your Date Range</h4>
+                  <p className="text-sm text-radiomke-cream-600">We recommend <strong className="text-radiomke-cream-500">last 18 months</strong> for comprehensive trend analysis</p>
                 </div>
               </div>
 
               <div className="flex gap-3">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                <div className="flex-shrink-0 w-8 h-8 bg-radiomke-orange-500 rounded-full flex items-center justify-center text-radiomke-cream-500 font-bold text-sm">
                   3
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-white font-semibold mb-1">Choose Daily Overview Report</h4>
-                  <p className="text-sm text-gray-400">This is your main dashboard data with daily breakdowns</p>
+                  <h4 className="text-radiomke-cream-500 font-semibold mb-1">Choose Daily Overview Report</h4>
+                  <p className="text-sm text-radiomke-cream-600">This is your main dashboard data with daily breakdowns</p>
                 </div>
               </div>
 
               <div className="flex gap-3">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                <div className="flex-shrink-0 w-8 h-8 bg-radiomke-orange-500 rounded-full flex items-center justify-center text-radiomke-cream-500 font-bold text-sm">
                   4
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-white font-semibold mb-1">Verify Required Columns</h4>
-                  <p className="text-sm text-gray-400 mb-2">Make sure your export includes these columns:</p>
+                  <h4 className="text-radiomke-cream-500 font-semibold mb-1">Verify Required Columns</h4>
+                  <p className="text-sm text-radiomke-cream-600 mb-2">Make sure your export includes these columns:</p>
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-gray-700 rounded px-3 py-2">
-                      <span className="text-xs font-mono text-green-400">Date</span>
-                      <span className="text-xs text-gray-400 ml-2">or Week</span>
+                    <div className="bg-radiomke-charcoal-700 rounded px-3 py-2">
+                      <span className="text-xs font-mono text-radiomke-blue-300">Date</span>
+                      <span className="text-xs text-radiomke-cream-600 ml-2">or Week</span>
                     </div>
-                    <div className="bg-gray-700 rounded px-3 py-2">
-                      <span className="text-xs font-mono text-green-400">Station</span>
+                    <div className="bg-radiomke-charcoal-700 rounded px-3 py-2">
+                      <span className="text-xs font-mono text-radiomke-blue-300">Station</span>
                     </div>
-                    <div className="bg-gray-700 rounded px-3 py-2">
-                      <span className="text-xs font-mono text-green-400">CUME</span>
+                    <div className="bg-radiomke-charcoal-700 rounded px-3 py-2">
+                      <span className="text-xs font-mono text-radiomke-blue-300">CUME</span>
                     </div>
-                    <div className="bg-gray-700 rounded px-3 py-2">
-                      <span className="text-xs font-mono text-green-400">TLH</span>
+                    <div className="bg-radiomke-charcoal-700 rounded px-3 py-2">
+                      <span className="text-xs font-mono text-radiomke-blue-300">TLH</span>
                     </div>
-                    <div className="bg-gray-700 rounded px-3 py-2">
-                      <span className="text-xs font-mono text-green-400">AAS</span>
-                      <span className="text-xs text-gray-400 ml-2">or Active Sessions</span>
+                    <div className="bg-radiomke-charcoal-700 rounded px-3 py-2">
+                      <span className="text-xs font-mono text-radiomke-blue-300">AAS</span>
+                      <span className="text-xs text-radiomke-cream-600 ml-2">or Active Sessions</span>
                     </div>
-                    <div className="bg-gray-700 rounded px-3 py-2">
-                      <span className="text-xs font-mono text-yellow-400">TSL</span>
-                      <span className="text-xs text-gray-400 ml-2">(optional)</span>
+                    <div className="bg-radiomke-charcoal-700 rounded px-3 py-2">
+                      <span className="text-xs font-mono text-radiomke-orange-400">TSL</span>
+                      <span className="text-xs text-radiomke-cream-600 ml-2">(optional)</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-3">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                <div className="flex-shrink-0 w-8 h-8 bg-radiomke-orange-500 rounded-full flex items-center justify-center text-radiomke-cream-500 font-bold text-sm">
                   5
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-white font-semibold mb-1">Export as CSV</h4>
-                  <p className="text-sm text-gray-400">Click "Export as CSV" or "Download CSV" and save with a clear name like <code className="text-blue-400 bg-gray-900 px-2 py-1 rounded text-xs">radio_milwaukee_daily_overview.csv</code></p>
+                  <h4 className="text-radiomke-cream-500 font-semibold mb-1">Export as CSV</h4>
+                  <p className="text-sm text-radiomke-cream-600">Click "Export as CSV" or "Download CSV" and save with a clear name like <code className="text-radiomke-orange-400 bg-radiomke-charcoal-700 px-2 py-1 rounded text-xs">radio_milwaukee_daily_overview.csv</code></p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Quick Tips */}
-          <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-4">
-            <h4 className="text-blue-300 font-semibold mb-2 flex items-center gap-2">
+          <div className="bg-radiomke-blue-500/10 border border-radiomke-blue-500/30 rounded-lg p-4">
+            <h4 className="text-radiomke-blue-300 font-semibold mb-2 flex items-center gap-2">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
               Pro Tips
             </h4>
-            <ul className="text-sm text-blue-200 space-y-1">
+            <ul className="text-sm text-radiomke-blue-200 space-y-1">
               <li>• Start with <strong>3 essential files</strong>: Daily Overview, Daypart Performance, Device Analysis</li>
               <li>• The app automatically <strong>averages CUME</strong> values (never sums them)</li>
               <li>• You can upload multiple files at once by selecting or dragging them together</li>
@@ -293,8 +293,8 @@ export default function FileUploader({ onFilesUploaded, onError, showInstruction
           </div>
 
           {/* Additional Resources */}
-          <div className="border-t border-gray-700 pt-4">
-            <p className="text-xs text-gray-400">
+          <div className="border-t border-radiomke-charcoal-400/30 pt-4">
+            <p className="text-xs text-radiomke-cream-600">
               Need more advanced exports? Check the complete guide with all 22 export types in our documentation.
             </p>
           </div>
@@ -310,8 +310,8 @@ export default function FileUploader({ onFilesUploaded, onError, showInstruction
         className={`
           relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200
           ${isDragging
-            ? 'border-blue-500 bg-blue-500/10 scale-[1.02]'
-            : 'border-gray-600 hover:border-blue-500 hover:bg-gray-800/50'
+            ? 'border-radiomke-orange-500 bg-radiomke-orange-500/10 scale-[1.02]'
+            : 'border-radiomke-charcoal-400 hover:border-radiomke-orange-500 hover:bg-radiomke-charcoal-600/50'
           }
           ${uploading ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
         `}
@@ -328,7 +328,7 @@ export default function FileUploader({ onFilesUploaded, onError, showInstruction
         <div className="pointer-events-none">
           {uploading ? (
             <svg
-              className="mx-auto h-12 w-12 text-blue-400 animate-spin"
+              className="mx-auto h-12 w-12 text-radiomke-orange-400 animate-spin"
               fill="none"
               viewBox="0 0 24 24"
             >
@@ -348,7 +348,7 @@ export default function FileUploader({ onFilesUploaded, onError, showInstruction
             </svg>
           ) : (
             <svg
-              className="mx-auto h-12 w-12 text-gray-400"
+              className="mx-auto h-12 w-12 text-radiomke-cream-600"
               stroke="currentColor"
               fill="none"
               viewBox="0 0 48 48"
@@ -363,14 +363,14 @@ export default function FileUploader({ onFilesUploaded, onError, showInstruction
             </svg>
           )}
 
-          <p className="mt-2 text-sm text-gray-300 font-medium">
+          <p className="mt-2 text-sm text-radiomke-cream-500 font-medium">
             {uploading
               ? 'Processing files...'
               : isDragging
               ? 'Drop files here'
               : 'Drag and drop CSV files here, or click to browse'}
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-radiomke-cream-600 mt-1">
             Supports Triton Webcast exports and Nielsen data (CSV files, max 50MB each)
           </p>
         </div>
@@ -380,16 +380,16 @@ export default function FileUploader({ onFilesUploaded, onError, showInstruction
       {Object.keys(uploadProgress).length > 0 && (
         <div className="mt-4 space-y-2">
           {Object.entries(uploadProgress).map(([filename, progress]) => (
-            <div key={filename} className="bg-gray-800 rounded-lg p-3">
+            <div key={filename} className="bg-radiomke-charcoal-600 rounded-lg p-3 border border-radiomke-charcoal-400/30">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm text-gray-300 truncate flex-1 mr-2">
+                <span className="text-sm text-radiomke-cream-500 truncate flex-1 mr-2">
                   {filename}
                 </span>
-                <span className="text-xs text-gray-400">{progress}%</span>
+                <span className="text-xs text-radiomke-cream-600">{progress}%</span>
               </div>
-              <div className="w-full bg-gray-700 rounded-full h-2">
+              <div className="w-full bg-radiomke-charcoal-700 rounded-full h-2">
                 <div
-                  className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                  className="bg-radiomke-orange-500 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 />
               </div>

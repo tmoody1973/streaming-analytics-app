@@ -356,13 +356,13 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "essential":
-        return "bg-green-900/30 border-green-700 text-green-300";
+        return "bg-radiomke-orange-500/10 border-radiomke-orange-500/30 text-radiomke-cream-500";
       case "recommended":
-        return "bg-yellow-900/30 border-yellow-700 text-yellow-300";
+        return "bg-radiomke-blue-500/10 border-radiomke-blue-500/30 text-radiomke-cream-500";
       case "advanced":
-        return "bg-blue-900/30 border-blue-700 text-blue-300";
+        return "bg-radiomke-charcoal-700 border-radiomke-charcoal-400/50 text-radiomke-cream-500";
       default:
-        return "bg-gray-800 border-gray-700 text-gray-300";
+        return "bg-radiomke-charcoal-600 border-radiomke-charcoal-400/30 text-radiomke-cream-500";
     }
   };
 
@@ -380,30 +380,30 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 space-y-6">
+    <div className="bg-radiomke-charcoal-600 rounded-lg p-6 space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-white mb-2">CSV Export Guide</h2>
-        <p className="text-sm text-gray-400">
+        <h2 className="text-2xl font-bold text-radiomke-cream-500 mb-2">CSV Export Guide</h2>
+        <p className="text-sm text-radiomke-cream-600">
           Complete guide to all 22 possible CSV exports from Triton Webcast Metrics and Nielsen
         </p>
       </div>
 
       {/* Progress Bar */}
-      <div className="bg-gray-700 rounded-lg p-4">
+      <div className="bg-radiomke-charcoal-700 rounded-lg p-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-white font-semibold">Upload Progress</span>
-          <span className="text-gray-300 text-sm">
+          <span className="text-radiomke-cream-500 font-semibold">Upload Progress</span>
+          <span className="text-radiomke-cream-500 text-sm">
             {uploadedCount} of {totalExports} exports
           </span>
         </div>
-        <div className="w-full bg-gray-600 rounded-full h-3">
+        <div className="w-full bg-radiomke-charcoal-700 rounded-full h-3">
           <div
-            className="bg-gradient-to-r from-blue-600 to-green-600 h-3 rounded-full transition-all duration-500"
+            className="bg-gradient-to-r from-radiomke-orange-500 to-radiomke-blue-500 h-3 rounded-full transition-all duration-500"
             style={{ width: `${progressPercentage}%` }}
           ></div>
         </div>
-        <p className="text-xs text-gray-400 mt-2">{progressPercentage}% complete</p>
+        <p className="text-xs text-radiomke-cream-600 mt-2">{progressPercentage}% complete</p>
       </div>
 
       {/* Priority Filter */}
@@ -412,8 +412,8 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
           onClick={() => setShowPriorityFilter("all")}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             showPriorityFilter === "all"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+              ? "bg-radiomke-orange-500 text-radiomke-cream-500"
+              : "bg-radiomke-charcoal-700 text-radiomke-cream-500 hover:bg-radiomke-charcoal-700"
           }`}
         >
           All Exports ({csvExports.length})
@@ -422,8 +422,8 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
           onClick={() => setShowPriorityFilter("essential")}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             showPriorityFilter === "essential"
-              ? "bg-green-600 text-white"
-              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+              ? "bg-radiomke-orange-500 text-radiomke-cream-500"
+              : "bg-radiomke-charcoal-700 text-radiomke-cream-500 hover:bg-radiomke-charcoal-700"
           }`}
         >
           🟢 Essential (3)
@@ -432,8 +432,8 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
           onClick={() => setShowPriorityFilter("recommended")}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             showPriorityFilter === "recommended"
-              ? "bg-yellow-600 text-white"
-              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+              ? "bg-radiomke-orange-400 text-radiomke-cream-500"
+              : "bg-radiomke-charcoal-700 text-radiomke-cream-500 hover:bg-radiomke-charcoal-700"
           }`}
         >
           🟡 Recommended (3)
@@ -442,8 +442,8 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
           onClick={() => setShowPriorityFilter("advanced")}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             showPriorityFilter === "advanced"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+              ? "bg-radiomke-orange-500 text-radiomke-cream-500"
+              : "bg-radiomke-charcoal-700 text-radiomke-cream-500 hover:bg-radiomke-charcoal-700"
           }`}
         >
           🔵 Advanced (16)
@@ -458,15 +458,15 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
           const isExpanded = expandedCategory === category;
 
           return (
-            <div key={category} className="border border-gray-700 rounded-lg overflow-hidden">
+            <div key={category} className="border border-radiomke-charcoal-400/30 rounded-lg overflow-hidden">
               {/* Category Header */}
               <button
                 onClick={() => setExpandedCategory(isExpanded ? null : category)}
-                className="w-full bg-gray-750 hover:bg-gray-700 transition-colors px-4 py-3 flex items-center justify-between"
+                className="w-full bg-radiomke-charcoal-700 hover:bg-radiomke-charcoal-700 transition-colors px-4 py-3 flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
                   <svg
-                    className={`w-5 h-5 text-gray-400 transition-transform ${
+                    className={`w-5 h-5 text-radiomke-cream-600 transition-transform ${
                       isExpanded ? "rotate-90" : ""
                     }`}
                     fill="none"
@@ -475,11 +475,11 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                  <span className="text-white font-semibold">{category}</span>
-                  <span className="text-gray-400 text-sm">({exports.length} exports)</span>
+                  <span className="text-radiomke-cream-500 font-semibold">{category}</span>
+                  <span className="text-radiomke-cream-600 text-sm">({exports.length} exports)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-radiomke-cream-600">
                     {exports.filter((e) => isFileUploaded(e.filename)).length} uploaded
                   </span>
                 </div>
@@ -516,7 +516,7 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
                                 </svg>
                               ) : (
                                 <svg
-                                  className="w-5 h-5 text-gray-500"
+                                  className="w-5 h-5 text-radiomke-cream-600"
                                   fill="none"
                                   stroke="currentColor"
                                   viewBox="0 0 24 24"
@@ -529,11 +529,11 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
                                   />
                                 </svg>
                               )}
-                              <h3 className="font-semibold text-white">{exp.name}</h3>
+                              <h3 className="font-semibold text-radiomke-cream-500">{exp.name}</h3>
                             </div>
-                            <p className="text-sm text-gray-300 mb-2">{exp.description}</p>
+                            <p className="text-sm text-radiomke-cream-500 mb-2">{exp.description}</p>
                           </div>
-                          <span className="text-xs font-bold px-2 py-1 bg-gray-900/50 rounded whitespace-nowrap ml-2">
+                          <span className="text-xs font-bold px-2 py-1 bg-radiomke-charcoal-700 rounded whitespace-nowrap ml-2">
                             {getPriorityBadge(exp.priority)}
                           </span>
                         </div>
@@ -542,20 +542,20 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
                         <div className="space-y-2 text-sm">
                           {/* Filename */}
                           <div>
-                            <span className="text-gray-400">Filename: </span>
-                            <code className="text-blue-300 bg-gray-900/50 px-2 py-1 rounded text-xs">
+                            <span className="text-radiomke-cream-600">Filename: </span>
+                            <code className="text-radiomke-orange-400 bg-radiomke-charcoal-700 px-2 py-1 rounded text-xs">
                               {exp.filename}
                             </code>
                           </div>
 
                           {/* Required Columns */}
                           <div>
-                            <span className="text-gray-400">Required Columns: </span>
+                            <span className="text-radiomke-cream-600">Required Columns: </span>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {exp.columns.map((col) => (
                                 <span
                                   key={col}
-                                  className="text-xs bg-gray-900/50 text-green-300 px-2 py-1 rounded"
+                                  className="text-xs bg-radiomke-charcoal-700 text-radiomke-blue-300 px-2 py-1 rounded"
                                 >
                                   {col}
                                 </span>
@@ -565,10 +565,10 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
 
                           {/* Triton Steps */}
                           <div>
-                            <span className="text-gray-400">Export Steps:</span>
+                            <span className="text-radiomke-cream-600">Export Steps:</span>
                             <ol className="list-decimal list-inside mt-1 space-y-1">
                               {exp.tritonSteps.map((step, idx) => (
-                                <li key={idx} className="text-xs text-gray-300">
+                                <li key={idx} className="text-xs text-radiomke-cream-500">
                                   {step}
                                 </li>
                               ))}
@@ -586,14 +586,14 @@ export default function CSVExportGuide({ uploadedFiles }: CSVExportGuideProps) {
       </div>
 
       {/* Help Footer */}
-      <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-4">
-        <h4 className="text-blue-300 font-semibold mb-2 flex items-center gap-2">
+      <div className="bg-radiomke-blue-500/10 border border-radiomke-blue-500/30 rounded-lg p-4">
+        <h4 className="text-radiomke-blue-300 font-semibold mb-2 flex items-center gap-2">
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
           </svg>
           Pro Tips
         </h4>
-        <ul className="text-sm text-blue-200 space-y-1">
+        <ul className="text-sm text-radiomke-blue-200 space-y-1">
           <li>
             • <strong>Start with the 3 Essential exports</strong> (marked with 🟢) to get your dashboard working
           </li>
