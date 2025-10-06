@@ -8,6 +8,8 @@ export interface RadioMetrics {
   date: Date;
   daypart?: string;
   device?: string;
+  station?: string; // Station identifier for filtering
+  fileId?: string; // Track which file this metric came from
 }
 
 export interface NielsenMetrics {
