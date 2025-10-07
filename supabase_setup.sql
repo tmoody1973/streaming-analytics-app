@@ -25,6 +25,9 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- 2. Create function to execute dynamic SQL (for table creation)
 -- This allows the upload API to create tables for new CSV files
+-- Drop existing function first if it has a different signature
+DROP FUNCTION IF EXISTS exec_sql(text);
+
 CREATE OR REPLACE FUNCTION exec_sql(sql text)
 RETURNS void AS $$
 BEGIN
