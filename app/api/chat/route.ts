@@ -121,6 +121,7 @@ async function executeToolCall(toolName: string, toolArgs: any) {
             'radio_milwaukee_device_analysis',
             'radio_milwaukee_daypart',
             'radio_milwaukee_hourly',
+            'radio_milwaukee_hourly_patterns',
           ];
 
           const existingTables = [];
