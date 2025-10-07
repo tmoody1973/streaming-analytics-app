@@ -172,7 +172,7 @@ function C1CardContent({
 
           // Save the response to the shape so it doesn't re-fetch on reload
           editor.updateShape({
-            id: shapeId,
+            id: shapeId as any,
             type: 'c1Card',
             props: {
               response: finalCleanData,
