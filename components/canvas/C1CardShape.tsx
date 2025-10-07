@@ -7,6 +7,7 @@ import {
   TLBaseShape,
   T,
   Rectangle2d,
+  useEditor,
 } from 'tldraw';
 import { C1Component, ThemeProvider } from '@thesysai/genui-sdk';
 import '@crayonai/react-ui/styles/index.css';
@@ -72,7 +73,11 @@ export class C1CardShapeUtil extends BaseBoxShapeUtil<C1CardShape> {
             overflow: 'hidden',
           }}
         >
-          <C1CardContent prompt={shape.props.prompt} />
+          <C1CardContent
+            shapeId={shape.id}
+            prompt={shape.props.prompt}
+            savedResponse={shape.props.response}
+          />
         </div>
       </HTMLContainer>
     );
@@ -84,12 +89,27 @@ export class C1CardShapeUtil extends BaseBoxShapeUtil<C1CardShape> {
 }
 
 // Component to handle C1 API call and rendering
-function C1CardContent({ prompt }: { prompt: string }) {
-  const [streamData, setStreamData] = useState<string>('');
-  const [loading, setLoading] = useState(true);
+function C1CardContent({
+  shapeId,
+  prompt,
+  savedResponse
+}: {
+  shapeId: string;
+  prompt: string;
+  savedResponse?: string;
+}) {
+  const editor = useEditor();
+  const [streamData, setStreamData] = useState<string>(savedResponse || '');
+  const [loading, setLoading] = useState(!savedResponse);
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
+    // Skip fetching if we already have a saved response
+    if (savedResponse) {
+      setLoading(false);
+      return;
+    }
+
     async function fetchC1Response() {
       if (!prompt) {
         setLoading(false);
@@ -149,6 +169,15 @@ function C1CardContent({ prompt }: { prompt: string }) {
           console.log('Final cleaned data for C1Component:', finalCleanData.substring(0, 300));
           setStreamData(finalCleanData);
           setLoading(false);
+
+          // Save the response to the shape so it doesn't re-fetch on reload
+          editor.updateShape({
+            id: shapeId,
+            type: 'c1Card',
+            props: {
+              response: finalCleanData,
+            },
+          });
         }
       } catch (err: any) {
         console.error('C1 card error:', err);
@@ -158,7 +187,7 @@ function C1CardContent({ prompt }: { prompt: string }) {
     }
 
     fetchC1Response();
-  }, [prompt]);
+  }, [prompt, savedResponse, editor, shapeId]);
 
   if (loading) {
     return (
