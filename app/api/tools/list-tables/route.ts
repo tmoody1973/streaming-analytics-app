@@ -15,6 +15,7 @@ export async function GET() {
       const potentialTables = [
         'radio_milwaukee_daily_overview',
         'radio_milwaukee_device_analysis',
+        'radio_milwaukee_hourly_patterns',
       ];
 
       const existingTables = [];
