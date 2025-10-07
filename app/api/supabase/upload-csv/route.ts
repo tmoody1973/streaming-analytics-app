@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       `;
 
       // Execute SQL using Supabase admin
-      let createError;
+      let createError: any;
       try {
         const result = await supabaseAdmin.rpc("exec_sql", {
           sql: createTableSQL
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
       if (createError) {
         console.error("Error creating table:", createError);
         return NextResponse.json(
-          { error: `Failed to create table: ${createError.message}` },
+          { error: `Failed to create table: ${createError.message || 'Unknown error'}` },
           { status: 500 }
         );
       }
