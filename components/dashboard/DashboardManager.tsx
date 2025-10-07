@@ -5,14 +5,17 @@ import type { DashboardConfiguration, RadioMetrics } from "@/types";
 import DynamicChart from "./DynamicChart";
 import DynamicKPI from "./DynamicKPI";
 import DynamicFilter from "./DynamicFilter";
+import DashboardChat from "../chat/DashboardChat";
 
 interface DashboardManagerProps {
   dashboard: DashboardConfiguration;
   data: RadioMetrics[];
+  onDashboardUpdated?: (dashboard: DashboardConfiguration) => void;
 }
 
-export default function DashboardManager({ dashboard, data }: DashboardManagerProps) {
+export default function DashboardManager({ dashboard, data, onDashboardUpdated }: DashboardManagerProps) {
   const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // Apply filters to data
   const filteredData = useMemo(() => {
@@ -41,6 +44,35 @@ export default function DashboardManager({ dashboard, data }: DashboardManagerPr
       ...prev,
       [field]: value,
     }));
+  };
+
+  const handleGenerateDashboard = async (userContext: string) => {
+    setIsGenerating(true);
+    try {
+      const response = await fetch("/api/ai/chat-dashboard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileName: dashboard.csvFileName,
+          data: data,
+          userContext,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate dashboard");
+      }
+
+      const updatedDashboard: DashboardConfiguration = await response.json();
+
+      if (onDashboardUpdated) {
+        onDashboardUpdated(updatedDashboard);
+      }
+    } catch (error) {
+      console.error("Chat dashboard generation error:", error);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -136,6 +168,9 @@ export default function DashboardManager({ dashboard, data }: DashboardManagerPr
           <p className="text-radiomke-cream-600">No data matches the selected filters</p>
         </div>
       )}
+
+      {/* Chat Interface */}
+      <DashboardChat onGenerateDashboard={handleGenerateDashboard} isGenerating={isGenerating} />
     </div>
   );
 }

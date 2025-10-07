@@ -37,3 +37,262 @@ body {
     opacity: 1;
   }
 }
+
+/* Tldraw Dark Mode Overrides - Radio Milwaukee Brand Theme */
+.tldraw__editor,
+.tldraw,
+.tl-container {
+  --color-background: #1F2528; /* Charcoal canvas background */
+  --color-low: #2A3135; /* UI panel background */
+  --color-panel: #2A3135; /* Panel background */
+  --color-text: #F7F1DB; /* Cream text */
+  --color-text-0: #F7F1DB; /* Primary text */
+  --color-text-1: rgba(247, 241, 219, 0.85); /* Secondary text */
+  --color-text-2: rgba(247, 241, 219, 0.6); /* Tertiary text */
+  --color-text-3: rgba(247, 241, 219, 0.4); /* Disabled text */
+  --color-primary: #F8971D; /* Orange for accents */
+  --color-selected: #F8971D; /* Orange for selections */
+  --color-grid: rgba(247, 241, 219, 0.08); /* Subtle grid */
+  background-color: #1F2528 !important;
+}
+
+/* Canvas background - dark charcoal */
+.tl-canvas,
+.tl-background,
+.tldraw__editor__background {
+  background-color: #1F2528 !important;
+}
+
+/* ===== TOP TOOLBAR ===== */
+.tlui-toolbar,
+.tlui-toolbar__inner,
+.tlui-toolbar__left,
+.tlui-toolbar__extras,
+.tlui-navigation-zone {
+  background-color: #2A3135 !important;
+  border: 1px solid rgba(247, 241, 219, 0.1) !important;
+  border-radius: 8px !important;
+}
+
+/* Force the left navigation area to be dark */
+.tlui-navigation-zone,
+.tlui-navigation-zone__controls {
+  background-color: #2A3135 !important;
+}
+
+.tlui-toolbar .tlui-button {
+  color: #F7F1DB !important;
+  background-color: transparent !important;
+}
+
+.tlui-toolbar .tlui-button:hover {
+  background-color: rgba(248, 151, 29, 0.15) !important;
+}
+
+.tlui-toolbar .tlui-button[data-state="selected"],
+.tlui-toolbar .tlui-button[data-state="hinted"] {
+  background-color: #F8971D !important;
+  color: #1F2528 !important;
+}
+
+/* ===== PAGE MENU (Page 1 dropdown) ===== */
+/* The button itself - ABSOLUTELY NO HOVER EFFECT */
+.tlui-page-menu__trigger,
+button[data-testid*="page-menu"],
+.tlui-button[data-testid*="page-menu"] {
+  background-color: #2A3135 !important;
+  color: #F7F1DB !important;
+  border: none !important;
+  transition: none !important;
+}
+
+/* Kill ALL hover/focus/active effects on Page 1 button */
+.tlui-page-menu__trigger:hover,
+.tlui-page-menu__trigger:focus,
+.tlui-page-menu__trigger:active,
+button[data-testid*="page-menu"]:hover,
+button[data-testid*="page-menu"]:focus,
+button[data-testid*="page-menu"]:active,
+.tlui-button[data-testid*="page-menu"]:hover,
+.tlui-button[data-testid*="page-menu"]:focus,
+.tlui-button[data-testid*="page-menu"]:active {
+  background-color: #2A3135 !important;
+  color: #F7F1DB !important;
+  border: none !important;
+  transition: none !important;
+}
+
+/* The dropdown content */
+.tlui-page-menu__wrapper,
+.tlui-page-menu__list {
+  background-color: #2A3135 !important;
+  border: 1px solid rgba(247, 241, 219, 0.2) !important;
+}
+
+/* Text inside page menu */
+.tlui-page-menu__name {
+  color: #F7F1DB !important;
+}
+
+/* Main menu button (hamburger) - FORCE DARK BACKGROUND */
+.tlui-menu-button,
+button[data-testid="main-menu-button"],
+.tlui-button[aria-label*="Main menu"],
+.tlui-button[aria-label*="menu"],
+button[aria-label="Main menu"],
+.tlui-toolbar__left button:first-child,
+[data-testid*="menu"] {
+  background-color: #2A3135 !important;
+  color: #F7F1DB !important;
+  border: 1px solid rgba(247, 241, 219, 0.15) !important;
+}
+
+.tlui-menu-button:hover,
+button[data-testid="main-menu-button"]:hover {
+  background-color: rgba(248, 151, 29, 0.15) !important;
+}
+
+/* Hamburger icon lines - FORCE VISIBLE */
+.tlui-menu-button svg,
+.tlui-menu-button svg *,
+button[data-testid="main-menu-button"] svg,
+button[data-testid="main-menu-button"] svg * {
+  color: #F7F1DB !important;
+  stroke: #F7F1DB !important;
+  fill: #F7F1DB !important;
+}
+
+/* Menu label text */
+.tlui-button__label {
+  color: #F7F1DB !important;
+}
+
+/* ===== DROPDOWN MENUS ===== */
+.tlui-menu,
+.tlui-dropdown-menu__content,
+.tlui-popover__content {
+  background-color: #2A3135 !important;
+  border: 1px solid rgba(247, 241, 219, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.tlui-menu__group {
+  color: #F7F1DB !important;
+}
+
+/* Menu items and buttons */
+.tlui-menu__button,
+.tlui-dropdown-menu__item,
+.tlui-menu-item,
+.tlui-button__menu {
+  color: #F7F1DB !important;
+}
+
+.tlui-menu__button span,
+.tlui-dropdown-menu__item span,
+.tlui-menu-item__label {
+  color: #F7F1DB !important;
+}
+
+.tlui-menu__button:hover,
+.tlui-dropdown-menu__item:hover {
+  background-color: rgba(248, 151, 29, 0.15) !important;
+  color: #F7F1DB !important;
+}
+
+/* Keyboard shortcuts in menus */
+.tlui-kbd {
+  color: rgba(247, 241, 219, 0.6) !important;
+  background-color: rgba(31, 37, 40, 0.5) !important;
+  border: 1px solid rgba(247, 241, 219, 0.2) !important;
+}
+
+/* ===== BOTTOM TOOLBAR ===== */
+.tlui-toolbar[data-testid="toolbar"],
+.tlui-toolbar__tools {
+  background-color: #2A3135 !important;
+  border: 1px solid rgba(247, 241, 219, 0.15) !important;
+  border-radius: 10px !important;
+  padding: 4px !important;
+}
+
+.tlui-toolbar__tools .tlui-button {
+  color: #F7F1DB !important;
+}
+
+.tlui-toolbar__tools .tlui-button:hover {
+  background-color: rgba(248, 151, 29, 0.2) !important;
+}
+
+.tlui-toolbar__tools .tlui-button[data-state="selected"] {
+  background-color: #F8971D !important;
+  color: #1F2528 !important;
+}
+
+/* ===== RIGHT STYLE PANEL ===== */
+.tlui-style-panel,
+.tlui-style-panel__wrapper {
+  background-color: #2A3135 !important;
+  border: 1px solid rgba(247, 241, 219, 0.15) !important;
+  border-radius: 8px !important;
+  padding: 8px !important;
+}
+
+.tlui-style-panel__section {
+  background-color: transparent !important;
+}
+
+/* Color picker labels */
+.tlui-input__wrapper label {
+  color: #F7F1DB !important;
+}
+
+/* ===== BUTTONS GENERAL ===== */
+.tlui-button__icon {
+  color: #F7F1DB !important;
+}
+
+.tlui-button:hover:not([data-state="selected"]) {
+  background-color: rgba(248, 151, 29, 0.1) !important;
+}
+
+/* ===== HELP PANEL / LICENSE TEXT ===== */
+.tlui-help-menu,
+.tlui-debug-panel {
+  background-color: #2A3135 !important;
+  color: rgba(247, 241, 219, 0.6) !important;
+  border: 1px solid rgba(247, 241, 219, 0.1) !important;
+}
+
+/* ===== INPUT FIELDS ===== */
+.tlui-input__wrapper input {
+  background-color: rgba(31, 37, 40, 0.5) !important;
+  border: 1px solid rgba(247, 241, 219, 0.2) !important;
+  color: #F7F1DB !important;
+}
+
+.tlui-input__wrapper input:focus {
+  border-color: #F8971D !important;
+  outline: none !important;
+}
+
+/* ===== GLOBAL TEXT COLOR FIX ===== */
+/* Ensure menu text is visible (but not too aggressive) */
+.tlui-menu,
+.tlui-dropdown-menu__content,
+.tlui-popover__content {
+  color: #F7F1DB;
+}
+
+/* Icons should also be visible */
+.tlui-icon,
+svg[class*="tlui"] {
+  color: #F7F1DB !important;
+  fill: currentColor !important;
+}
+
+/* ===== CLEAN UP LAYOUT BACKGROUNDS ===== */
+/* Make sure top sections don't interfere */
+.tlui-layout__top {
+  background-color: transparent !important;
+}

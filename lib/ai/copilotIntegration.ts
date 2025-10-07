@@ -196,7 +196,8 @@ function processToolCalls(toolCalls: ToolCall[]): {
  */
 export async function aiGenerateDashboard(
   fileName: string,
-  data: RadioMetrics[]
+  data: RadioMetrics[],
+  userContext?: string
 ): Promise<DashboardConfiguration> {
   const analysis = analyzeData(data);
   const dashboardType = detectDashboardType(fileName, analysis);
@@ -212,10 +213,10 @@ export async function aiGenerateDashboard(
 **Your task:** Analyze the data and call functions to build an optimal dashboard.
 
 **Guidelines:**
-1. Create 3-5 KPI cards highlighting key metrics
-2. Create 3-6 charts showing different insights
-3. Add 1-3 filters for interactivity
-4. Add 2-3 insights about notable patterns
+1. Create 4-6 KPI cards highlighting key metrics
+2. Create 6-8 charts showing DIFFERENT insights (trends, comparisons, distributions, patterns, correlations, hourly breakdown)
+3. Add 2-4 filters for interactivity
+4. Add 3-5 insights about notable patterns
 
 **Chart selection:**
 - Line charts: Time series, trends
@@ -224,7 +225,18 @@ export async function aiGenerateDashboard(
 - Heatmaps: Two-dimensional patterns
 - Tables: Detailed data views
 
+**IMPORTANT:** Each chart should show a DIFFERENT aspect of the data. Vary your analysis across:
+- Temporal trends (line charts over time)
+- Category comparisons (bar charts by station/device)
+- Distribution breakdowns (pie charts)
+- Pattern detection (heatmaps for hourly/daypart)
+- Detailed views (tables for raw data)
+
 Call multiple functions to build the complete dashboard.`;
+
+  const contextSection = userContext
+    ? `\n**User's Request:** "${userContext}"\nPrioritize charts and insights that address this request.`
+    : "";
 
   const userPrompt = `**File:** ${fileName}
 **Dashboard Type:** ${dashboardType}
@@ -235,7 +247,7 @@ Call multiple functions to build the complete dashboard.`;
 - Numeric: ${analysis.numericColumns.join(", ")}
 - Categories: ${analysis.categoricalColumns.join(", ")}
 - Time series: ${analysis.hasTimeSeries ? "Yes" : "No"}
-${analysis.dateRange ? `- Date range: ${analysis.dateRange.start.toLocaleDateString()} to ${analysis.dateRange.end.toLocaleDateString()}` : ""}
+${analysis.dateRange ? `- Date range: ${analysis.dateRange.start.toLocaleDateString()} to ${analysis.dateRange.end.toLocaleDateString()}` : ""}${contextSection}
 
 Analyze this radio analytics data and create an optimal dashboard by calling the appropriate functions.`;
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Papa from "papaparse";
 import { detectCSVType, detectExportType, parseTritonMetrics, parseNielsenMetrics } from "@/lib/utils/radioMetrics";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export async function POST(request: NextRequest) {
   try {
@@ -110,6 +111,37 @@ export async function POST(request: NextRequest) {
 
       const totalTlh = processedMetrics.reduce((sum: number, m: any) => sum + m.tlh, 0);
 
+      // Store processed data in Supabase
+      const tableName = file.name
+        .toLowerCase()
+        .replace(/\.csv$/, "")
+        .replace(/[^a-z0-9_]/g, "_")
+        .replace(/^(\d)/, "_$1") // Prefix with _ if starts with number
+        .substring(0, 63); // Postgres table name limit
+
+      try {
+        // Create table and insert data via Supabase
+        const uploadResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/supabase/upload-csv`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fileName: file.name,
+            data: processedMetrics,
+          }),
+        });
+
+        if (!uploadResponse.ok) {
+          console.error("Failed to store data in Supabase:", await uploadResponse.text());
+          // Continue anyway - we can still return the processed data
+        } else {
+          const uploadData = await uploadResponse.json();
+          console.log(`Stored ${uploadData.rowCount} rows in table: ${uploadData.tableName}`);
+        }
+      } catch (supabaseError) {
+        console.error("Error storing data in Supabase:", supabaseError);
+        // Continue anyway - we can still return the processed data
+      }
+
       return NextResponse.json({
         success: true,
         id: crypto.randomUUID(),
@@ -119,6 +151,7 @@ export async function POST(request: NextRequest) {
         recordCount,
         fileName: file.name,
         fileSize: file.size,
+        tableName, // Include the table name for reference
         summary: {
           avgCume,
           totalTlh: Math.round(totalTlh),

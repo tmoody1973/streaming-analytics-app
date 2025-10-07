@@ -1,10 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { ResponsiveLine } from "@nivo/line";
-import { ResponsiveBar } from "@nivo/bar";
-import { ResponsivePie } from "@nivo/pie";
-import { ResponsiveHeatMap } from "@nivo/heatmap";
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import type { ChartSpecification, RadioMetrics } from "@/types";
 
 interface DynamicChartProps {
@@ -12,60 +9,23 @@ interface DynamicChartProps {
   data: RadioMetrics[];
 }
 
-const RADIO_MKE_THEME = {
-  axis: {
-    ticks: {
-      text: {
-        fill: "#D1D5DB",
-        fontSize: 13,
-        fontWeight: 500,
-      },
-    },
-    legend: {
-      text: {
-        fill: "#F3F4F6",
-        fontSize: 14,
-        fontWeight: 600,
-      },
-    },
-  },
-  grid: {
-    line: {
-      stroke: "#4B5563",
-      strokeWidth: 1,
-    },
-  },
-  legends: {
-    text: {
-      fill: "#F3F4F6",
-      fontSize: 13,
-      fontWeight: 500,
-    },
-  },
-  labels: {
-    text: {
-      fill: "#1F2937",
-      fontSize: 12,
-      fontWeight: 700,
-    },
-  },
-  tooltip: {
-    container: {
-      background: "#1F2937",
-      color: "#F3F4F6",
-      fontSize: 14,
-      borderRadius: "8px",
-      boxShadow: "0 10px 25px rgba(0, 0, 0, 0.5)",
-      padding: "12px 16px",
-      border: "1px solid #4B5563",
-    },
-  },
-};
-
 const COLORS = ["#F8971D", "#32588E", "#FAB342", "#6E99BB", "#D67A0A", "#91B1CB"];
 
 export default function DynamicChart({ chart, data }: DynamicChartProps) {
   const chartData = useMemo(() => {
+    console.log(`[DynamicChart] ${chart.title}:`, {
+      dataLength: data?.length || 0,
+      chartType: chart.type,
+      xAxis: chart.xAxis,
+      dataKeys: chart.dataKeys,
+      sampleData: data?.[0],
+    });
+
+    if (!data || data.length === 0) {
+      console.warn(`[DynamicChart] ${chart.title}: No data provided`);
+      return [];
+    }
+
     if (chart.type === "table") {
       return data;
     }
@@ -79,253 +39,160 @@ export default function DynamicChart({ chart, data }: DynamicChartProps) {
           chart.xAxis === "date"
             ? new Date(item.date).toLocaleDateString()
             : chart.xAxis
-            ? String((item as any)[chart.xAxis])
-            : "";
+            ? String((item as any)[chart.xAxis] || "Unknown")
+            : "Unknown";
 
         if (!grouped.has(key)) {
-          grouped.set(key, { x: key });
+          grouped.set(key, { name: key });
         }
 
         const group = grouped.get(key)!;
         chart.dataKeys.forEach((dataKey) => {
           const value = (item as any)[dataKey];
-          if (value != null) {
-            group[dataKey] = (group[dataKey] || 0) + value;
+          if (value != null && !isNaN(Number(value))) {
+            group[dataKey] = (group[dataKey] || 0) + Number(value);
           }
         });
       });
 
-      return Array.from(grouped.values());
+      const result = Array.from(grouped.values());
+      console.log(`[DynamicChart] ${chart.title} - Grouped data:`, result.slice(0, 3));
+      return result;
+    }
+
+    // For pie charts
+    if (chart.type === "pie") {
+      return data;
     }
 
     return data;
   }, [data, chart]);
 
+  if (!chartData || chartData.length === 0) {
+    return (
+      <div className="bg-radiomke-charcoal-600 rounded-lg p-6 border border-radiomke-charcoal-400/30">
+        <div className="mb-6">
+          <h3 className="text-xl font-bold text-radiomke-cream-500">{chart.title}</h3>
+          {chart.description && (
+            <p className="text-sm text-radiomke-cream-600 mt-2">{chart.description}</p>
+          )}
+        </div>
+        <div className="h-96 flex items-center justify-center">
+          <p className="text-radiomke-cream-600">No data available for this chart</p>
+        </div>
+      </div>
+    );
+  }
+
   const renderChart = () => {
     switch (chart.type) {
       case "line": {
-        // Transform data for Nivo line chart
-        const lineData = chart.dataKeys.map((key, idx) => ({
-          id: key,
-          color: COLORS[idx % COLORS.length],
-          data: chartData.map((item) => ({
-            x: item.x || item[chart.xAxis!],
-            y: Number(item[key]) || 0,
-          })),
-        }));
-
         return (
-          <ResponsiveLine
-            data={lineData}
-            theme={RADIO_MKE_THEME}
-            colors={COLORS}
-            margin={{ top: 30, right: 140, bottom: 80, left: 70 }}
-            xScale={{ type: "point" }}
-            yScale={{ type: "linear", min: "auto", max: "auto" }}
-            axisTop={null}
-            axisRight={null}
-            axisBottom={{
-              tickSize: 8,
-              tickPadding: 10,
-              tickRotation: -45,
-              legend: chart.xAxis?.toUpperCase() || "X AXIS",
-              legendOffset: 70,
-              legendPosition: "middle",
-            }}
-            axisLeft={{
-              tickSize: 8,
-              tickPadding: 10,
-              tickRotation: 0,
-              legend: chart.dataKeys.join(", ").toUpperCase(),
-              legendOffset: -60,
-              legendPosition: "middle",
-            }}
-            pointSize={10}
-            pointColor={{ from: "color", modifiers: [] }}
-            pointBorderWidth={3}
-            pointBorderColor={{ from: "serieColor" }}
-            pointLabelYOffset={-12}
-            useMesh={true}
-            enableSlices="x"
-            curve="monotoneX"
-            lineWidth={3}
-            legends={[
-              {
-                anchor: "bottom-right",
-                direction: "column",
-                justify: false,
-                translateX: 120,
-                translateY: 0,
-                itemsSpacing: 8,
-                itemDirection: "left-to-right",
-                itemWidth: 100,
-                itemHeight: 24,
-                symbolSize: 16,
-                symbolShape: "circle",
-              },
-            ]}
-          />
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart data={chartData} margin={{ top: 20, right: 120, bottom: 80, left: 60 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
+              <XAxis
+                dataKey="name"
+                stroke="#D1D5DB"
+                angle={-45}
+                textAnchor="end"
+                height={80}
+                tick={{ fill: "#D1D5DB", fontSize: 12 }}
+              />
+              <YAxis stroke="#D1D5DB" tick={{ fill: "#D1D5DB", fontSize: 12 }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#1F2937",
+                  border: "1px solid #4B5563",
+                  borderRadius: "8px",
+                  color: "#F3F4F6",
+                }}
+              />
+              <Legend
+                wrapperStyle={{ paddingTop: "20px" }}
+                iconType="circle"
+              />
+              {chart.dataKeys.map((key, idx) => (
+                <Line
+                  key={key}
+                  type="monotone"
+                  dataKey={key}
+                  stroke={COLORS[idx % COLORS.length]}
+                  strokeWidth={3}
+                  dot={{ fill: COLORS[idx % COLORS.length], r: 4 }}
+                  activeDot={{ r: 6 }}
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
         );
       }
 
       case "bar": {
         return (
-          <ResponsiveBar
-            data={chartData}
-            keys={chart.dataKeys}
-            indexBy={chart.xAxis || "x"}
-            theme={RADIO_MKE_THEME}
-            colors={COLORS}
-            margin={{ top: 30, right: 140, bottom: 80, left: 70 }}
-            padding={0.3}
-            valueScale={{ type: "linear" }}
-            indexScale={{ type: "band", round: true }}
-            borderColor={{ from: "color", modifiers: [["darker", 1.6]] }}
-            axisTop={null}
-            axisRight={null}
-            axisBottom={{
-              tickSize: 8,
-              tickPadding: 10,
-              tickRotation: -45,
-              legend: chart.xAxis?.toUpperCase() || "X AXIS",
-              legendPosition: "middle",
-              legendOffset: 70,
-            }}
-            axisLeft={{
-              tickSize: 8,
-              tickPadding: 10,
-              tickRotation: 0,
-              legend: chart.dataKeys.join(", ").toUpperCase(),
-              legendPosition: "middle",
-              legendOffset: -60,
-            }}
-            labelSkipWidth={12}
-            labelSkipHeight={12}
-            labelTextColor="#1F2937"
-            legends={[
-              {
-                dataFrom: "keys",
-                anchor: "bottom-right",
-                direction: "column",
-                justify: false,
-                translateX: 120,
-                translateY: 0,
-                itemsSpacing: 8,
-                itemWidth: 100,
-                itemHeight: 24,
-                itemDirection: "left-to-right",
-                symbolSize: 16,
-              },
-            ]}
-            role="application"
-          />
+          <ResponsiveContainer width="100%" height={400}>
+            <BarChart data={chartData} margin={{ top: 20, right: 120, bottom: 80, left: 60 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
+              <XAxis
+                dataKey="name"
+                stroke="#D1D5DB"
+                angle={-45}
+                textAnchor="end"
+                height={80}
+                tick={{ fill: "#D1D5DB", fontSize: 12 }}
+              />
+              <YAxis stroke="#D1D5DB" tick={{ fill: "#D1D5DB", fontSize: 12 }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#1F2937",
+                  border: "1px solid #4B5563",
+                  borderRadius: "8px",
+                  color: "#F3F4F6",
+                }}
+              />
+              <Legend wrapperStyle={{ paddingTop: "20px" }} />
+              {chart.dataKeys.map((key, idx) => (
+                <Bar key={key} dataKey={key} fill={COLORS[idx % COLORS.length]} />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
         );
       }
 
       case "pie": {
         const pieData = chart.dataKeys.map((key, idx) => ({
-          id: key,
-          label: key,
+          name: key,
           value: chartData.reduce((sum, item) => sum + (Number(item[key]) || 0), 0),
-          color: COLORS[idx % COLORS.length],
         }));
 
         return (
-          <ResponsivePie
-            data={pieData}
-            theme={RADIO_MKE_THEME}
-            colors={COLORS}
-            margin={{ top: 20, right: 80, bottom: 20, left: 80 }}
-            innerRadius={0.5}
-            padAngle={0.7}
-            cornerRadius={3}
-            activeOuterRadiusOffset={8}
-            borderWidth={1}
-            borderColor={{ from: "color", modifiers: [["darker", 0.2]] }}
-            arcLinkLabelsSkipAngle={10}
-            arcLinkLabelsTextColor="#E5E7EB"
-            arcLinkLabelsThickness={2}
-            arcLinkLabelsColor={{ from: "color" }}
-            arcLabelsSkipAngle={10}
-            arcLabelsTextColor="#1F2937"
-            legends={[
-              {
-                anchor: "right",
-                direction: "column",
-                justify: false,
-                translateX: 0,
-                translateY: 0,
-                itemsSpacing: 8,
-                itemWidth: 60,
-                itemHeight: 18,
-                itemTextColor: "#E5E7EB",
-                itemDirection: "left-to-right",
-                symbolSize: 14,
-                symbolShape: "circle",
-              },
-            ]}
-          />
-        );
-      }
-
-      case "heatmap": {
-        // Transform data for heatmap
-        const heatmapData = chartData.map((item) => ({
-          id: item[chart.xAxis!] || item.x,
-          data: chart.dataKeys.map((key) => ({
-            x: key,
-            y: Number(item[key]) || 0,
-          })),
-        }));
-
-        return (
-          <ResponsiveHeatMap
-            data={heatmapData}
-            theme={RADIO_MKE_THEME}
-            margin={{ top: 20, right: 60, bottom: 60, left: 60 }}
-            valueFormat=">-.2s"
-            axisTop={null}
-            axisRight={null}
-            axisBottom={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: -45,
-              legend: "",
-              legendOffset: 36,
-            }}
-            axisLeft={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: chart.xAxis || "category",
-              legendPosition: "middle",
-              legendOffset: -40,
-            }}
-            colors={{
-              type: "diverging",
-              scheme: "orange_red",
-              divergeAt: 0.5,
-            }}
-            emptyColor="#1F2937"
-            borderColor={{ from: "color", modifiers: [["darker", 0.6]] }}
-            legends={[
-              {
-                anchor: "right",
-                translateX: 30,
-                translateY: 0,
-                length: 200,
-                thickness: 8,
-                direction: "column",
-                tickPosition: "after",
-                tickSize: 3,
-                tickSpacing: 4,
-                tickOverlap: false,
-                title: "Value →",
-                titleAlign: "start",
-                titleOffset: 4,
-              },
-            ]}
-          />
+          <ResponsiveContainer width="100%" height={400}>
+            <PieChart>
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                labelLine={true}
+                label={(entry) => `${entry.name}: ${entry.value.toLocaleString()}`}
+                outerRadius={120}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {pieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#1F2937",
+                  border: "1px solid #4B5563",
+                  borderRadius: "8px",
+                  color: "#F3F4F6",
+                }}
+              />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
         );
       }
 
@@ -384,7 +251,9 @@ export default function DynamicChart({ chart, data }: DynamicChartProps) {
           <p className="text-sm text-radiomke-cream-600 mt-2">{chart.description}</p>
         )}
       </div>
-      <div className={chart.type === "table" ? "" : "h-96"}>{renderChart()}</div>
+      <div className={chart.type === "table" ? "" : "w-full"} style={chart.type !== "table" ? { height: "400px" } : undefined}>
+        {renderChart()}
+      </div>
     </div>
   );
 }

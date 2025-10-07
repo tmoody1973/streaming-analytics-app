@@ -1,12 +1,7 @@
-import type { Metadata } from "next";
-import { CopilotKit } from "@copilotkit/react-core";
-import "@copilotkit/react-ui/styles.css";
-import "./globals.css";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Radio Milwaukee Analytics Platform",
-  description: "Streaming analytics and AI-powered insights for Radio Milwaukee",
-};
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import "./globals.css";
 
 export default function RootLayout({
   children,
@@ -15,10 +10,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body suppressHydrationWarning>
-        <CopilotKit runtimeUrl="/api/copilotkit">
+        <ThemeProvider>
           {children}
-        </CopilotKit>
+        </ThemeProvider>
       </body>
     </html>
   );
