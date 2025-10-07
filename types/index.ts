@@ -31,9 +31,53 @@ export interface DemographicSegment {
   ethnicity?: "White" | "Black" | "Hispanic" | "Asian" | "Other" | "All";
 }
 
+// Dashboard types for AI-powered chart generation
+export type DashboardType = "daily_overview" | "device_analysis" | "hourly_patterns" | "daypart_performance" | "custom";
+
+export interface ChartSpecification {
+  id: string;
+  type: "line" | "bar" | "pie" | "area" | "table" | "heatmap" | "scatter";
+  title: string;
+  description?: string;
+  dataKeys: string[]; // Which fields to visualize
+  xAxis?: string;
+  yAxis?: string;
+  color?: string;
+  filters?: string[]; // Which dimensions can be filtered
+}
+
+export interface DashboardConfiguration {
+  id: string;
+  name: string;
+  type: DashboardType;
+  csvFileName: string;
+  charts: ChartSpecification[];
+  kpis: KPISpecification[];
+  filters: FilterSpecification[];
+  createdAt: Date;
+  generatedByAI: boolean;
+  aiInsights?: string[];
+}
+
+export interface KPISpecification {
+  id: string;
+  label: string;
+  metric: string; // Field name to calculate
+  calculation: "average" | "sum" | "count" | "max" | "min";
+  format?: "number" | "currency" | "percentage" | "decimal";
+  color?: "orange" | "blue" | "cream";
+}
+
+export interface FilterSpecification {
+  id: string;
+  field: string;
+  label: string;
+  type: "select" | "date" | "range" | "multiselect";
+  options?: string[];
+}
+
 export interface DataContext {
-  streamingData: RadioMetrics[];
-  nielsenData?: NielsenMetrics[];
+  dashboards: DashboardConfiguration[];
   uploadedFiles: UploadedFile[];
   lastUpdated: Date;
 }
@@ -41,11 +85,13 @@ export interface DataContext {
 export interface UploadedFile {
   id: string;
   name: string;
-  type: "triton" | "nielsen" | "demographics";
+  type: "triton" | "nielsen" | "demographics" | "custom";
   uploadedAt: Date;
   recordCount: number;
   status: "processing" | "completed" | "error";
   errorMessage?: string;
+  data: RadioMetrics[]; // Store the actual data with the file
+  dashboardId?: string; // Link to generated dashboard
 }
 
 export interface DateRange {
