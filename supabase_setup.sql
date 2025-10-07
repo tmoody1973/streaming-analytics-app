@@ -35,6 +35,18 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+-- 2b. Create function to execute SELECT queries and return JSON
+-- This allows the chat API to run templated SQL queries
+CREATE OR REPLACE FUNCTION execute_sql_query(query_text text)
+RETURNS json AS $$
+DECLARE
+  result json;
+BEGIN
+  EXECUTE 'SELECT json_agg(t) FROM (' || query_text || ') t' INTO result;
+  RETURN COALESCE(result, '[]'::json);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 -- 3. Create dashboards table (if not exists)
 -- This stores your tldraw canvas states
 CREATE TABLE IF NOT EXISTS public.dashboards (

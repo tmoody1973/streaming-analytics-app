@@ -28,7 +28,13 @@ WORKFLOW:
 TOOLS:
 - list_available_tables(): Find available datasets
 - get_table_schema(tableName): See column structure (optional)
-- query_radio_data(tableName, limit): Fetch actual data
+- query_radio_data(tableName, limit): Fetch raw data (use for simple queries)
+- execute_smart_query(queryType, stations, metric): ADVANCED - Use for comparisons, rankings, "best" queries
+  * queryType options: "compare_stations", "best_hours", "station_overview", "hourly_trends"
+  * Automatically aggregates, filters, and sorts data
+  * Examples:
+    - Compare WYMS vs WYMSHD2: execute_smart_query("compare_stations", ["WYMSFM", "WYMSHD2"], "cume")
+    - Find best hours: execute_smart_query("best_hours", ["WYMSFM"], "cume", 5)
 
 HANDLING COMPARISONS:
 When user asks to compare stations (e.g., "Compare WYMS vs WYMSHD2"):
@@ -49,6 +55,65 @@ STRICT RULES:
 - Common columns: Station, Hour, Date, CUME, TLH, TSL, AAS, Device
 
 If you're unsure what to visualize: Create a Table showing the raw data!`;
+
+// Query templates for common patterns
+const QUERY_TEMPLATES = {
+  compare_stations_by_hour: (stations: string[], metric: string = 'cume') => {
+    const stationList = stations.map(s => `'${s.toUpperCase()}'`).join(',');
+    return `
+      SELECT
+        station,
+        hour_of_day as hour,
+        ROUND(AVG(${metric})::numeric, 2) as avg_${metric},
+        COUNT(*) as data_points
+      FROM radio_milwaukee_hourly_patterns
+      WHERE UPPER(station) IN (${stationList})
+      GROUP BY station, hour_of_day
+      ORDER BY hour_of_day, station
+    `;
+  },
+
+  best_hours_for_station: (station: string, metric: string = 'cume', limit: number = 5) => {
+    return `
+      SELECT
+        hour_of_day as hour,
+        ROUND(AVG(${metric})::numeric, 2) as avg_${metric},
+        COUNT(*) as weeks_analyzed
+      FROM radio_milwaukee_hourly_patterns
+      WHERE UPPER(station) = '${station.toUpperCase()}'
+      GROUP BY hour_of_day
+      ORDER BY avg_${metric} DESC
+      LIMIT ${limit}
+    `;
+  },
+
+  station_overview: (station: string) => {
+    return `
+      SELECT
+        station,
+        ROUND(AVG(cume)::numeric, 2) as avg_cume,
+        ROUND(AVG(tlh)::numeric, 2) as avg_tlh,
+        ROUND(AVG(aas)::numeric, 2) as avg_aas,
+        COUNT(DISTINCT week) as weeks_of_data
+      FROM radio_milwaukee_hourly_patterns
+      WHERE UPPER(station) = '${station.toUpperCase()}'
+      GROUP BY station
+    `;
+  },
+
+  hourly_trends: (station: string, metric: string = 'cume') => {
+    return `
+      SELECT
+        hour_of_day as hour,
+        week,
+        ${metric}
+      FROM radio_milwaukee_hourly_patterns
+      WHERE UPPER(station) = '${station.toUpperCase()}'
+      ORDER BY week, hour_of_day
+      LIMIT 500
+    `;
+  },
+};
 
 const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
   {
@@ -97,6 +162,38 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
           },
         },
         required: ["tableName"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "execute_smart_query",
+      description: "Execute optimized SQL queries for complex analysis like comparisons, rankings, and aggregations. Use this for queries that need filtering, grouping, or finding 'best' values.",
+      parameters: {
+        type: "object",
+        properties: {
+          queryType: {
+            type: "string",
+            enum: ["compare_stations", "best_hours", "station_overview", "hourly_trends"],
+            description: "Type of query: compare_stations (compare 2+ stations), best_hours (find top performing hours), station_overview (station summary), hourly_trends (time series data)"
+          },
+          stations: {
+            type: "array",
+            items: { type: "string" },
+            description: "Station names (e.g. ['WYMSFM', 'WYMSHD2']). Required for compare_stations and best_hours"
+          },
+          metric: {
+            type: "string",
+            enum: ["cume", "tlh", "tsl", "aas"],
+            description: "Metric to analyze (default: cume). cume=audience, tlh=listening hours, tsl=time spent, aas=active sessions"
+          },
+          limit: {
+            type: "number",
+            description: "Max results for best_hours query (default: 5)"
+          }
+        },
+        required: ["queryType", "stations"],
       },
     },
   },
@@ -279,6 +376,73 @@ async function executeToolCall(toolName: string, toolArgs: any) {
 
       console.log(`Query returned ${result.rowCount} rows from ${tableName}`);
       return JSON.stringify(result);
+    }
+
+    if (toolName === "execute_smart_query") {
+      console.log("Calling execute_smart_query:", toolArgs);
+
+      const { queryType, stations, metric = 'cume', limit = 5 } = toolArgs;
+
+      if (!queryType || !stations || stations.length === 0) {
+        return JSON.stringify({
+          error: "queryType and stations are required"
+        });
+      }
+
+      let sql = '';
+
+      try {
+        // Generate SQL from template
+        switch (queryType) {
+          case 'compare_stations':
+            sql = QUERY_TEMPLATES.compare_stations_by_hour(stations, metric);
+            break;
+          case 'best_hours':
+            sql = QUERY_TEMPLATES.best_hours_for_station(stations[0], metric, limit);
+            break;
+          case 'station_overview':
+            sql = QUERY_TEMPLATES.station_overview(stations[0]);
+            break;
+          case 'hourly_trends':
+            sql = QUERY_TEMPLATES.hourly_trends(stations[0], metric);
+            break;
+          default:
+            return JSON.stringify({ error: `Unknown queryType: ${queryType}` });
+        }
+
+        console.log(`Executing ${queryType} query:`, sql.trim().substring(0, 200));
+
+        // Execute SQL via Supabase RPC
+        const { data, error } = await supabaseAdmin.rpc('execute_sql_query', {
+          query_text: sql
+        });
+
+        if (error) {
+          console.error("Smart query error:", error);
+          return JSON.stringify({
+            success: false,
+            error: `Query failed: ${error.message}`
+          });
+        }
+
+        const result = {
+          success: true,
+          queryType,
+          data,
+          rowCount: data?.length || 0,
+          sql: sql.trim() // Include SQL for debugging
+        };
+
+        console.log(`Smart query returned ${result.rowCount} rows`);
+        return JSON.stringify(result);
+
+      } catch (err: any) {
+        console.error("execute_smart_query error:", err);
+        return JSON.stringify({
+          success: false,
+          error: err.message
+        });
+      }
     }
 
     return JSON.stringify({ error: `Unknown tool: ${toolName}` });
