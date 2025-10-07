@@ -75,11 +75,17 @@ export function analyzeData(data: RadioMetrics[]): DataAnalysis {
   // Get date range
   let dateRange: { start: Date; end: Date } | undefined;
   if (hasTimeSeries && data.length > 0) {
-    const dates = data.map((d) => d.date).filter(Boolean);
-    dateRange = {
-      start: new Date(Math.min(...dates.map((d) => d.getTime()))),
-      end: new Date(Math.max(...dates.map((d) => d.getTime()))),
-    };
+    const dates = data
+      .map((d) => d.date)
+      .filter(Boolean)
+      .map((d) => (d instanceof Date ? d : new Date(d)));
+
+    if (dates.length > 0) {
+      dateRange = {
+        start: new Date(Math.min(...dates.map((d) => d.getTime()))),
+        end: new Date(Math.max(...dates.map((d) => d.getTime()))),
+      };
+    }
   }
 
   return {

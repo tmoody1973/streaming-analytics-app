@@ -14,8 +14,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Convert date strings back to Date objects
+    const metricsWithDates = data.map((item) => ({
+      ...item,
+      date: item.date ? new Date(item.date) : new Date(),
+    }));
+
     // Generate dashboard using GPT-5
-    const dashboard = await aiGenerateDashboard(fileName, data);
+    const dashboard = await aiGenerateDashboard(fileName, metricsWithDates);
 
     return NextResponse.json(dashboard);
   } catch (error: any) {
