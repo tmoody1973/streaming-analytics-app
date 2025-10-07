@@ -3,24 +3,29 @@
 import type { UploadedFile, RadioMetrics } from "@/types";
 
 interface DataSummaryProps {
-  uploadedFiles: UploadedFile[];
+  files?: UploadedFile[];
+  uploadedFiles?: UploadedFile[];
   metricsData?: RadioMetrics[];
   onRemoveFile?: (fileId: string) => void;
 }
 
 export default function DataSummary({
+  files,
   uploadedFiles,
   metricsData = [],
   onRemoveFile,
 }: DataSummaryProps) {
-  if (uploadedFiles.length === 0) {
+  // Support both 'files' and 'uploadedFiles' props for backwards compatibility
+  const fileList = files || uploadedFiles || [];
+
+  if (fileList.length === 0) {
     return null;
   }
 
   // Calculate summary statistics
-  const totalRecords = uploadedFiles.reduce((sum, file) => sum + file.recordCount, 0);
-  const successfulFiles = uploadedFiles.filter((f) => f.status === "completed").length;
-  const failedFiles = uploadedFiles.filter((f) => f.status === "error").length;
+  const totalRecords = fileList.reduce((sum, file) => sum + file.recordCount, 0);
+  const successfulFiles = fileList.filter((f) => f.status === "completed").length;
+  const failedFiles = fileList.filter((f) => f.status === "error").length;
 
   // Calculate date range from metrics
   const dates = metricsData.map((m) => new Date(m.date).getTime());
@@ -46,7 +51,7 @@ export default function DataSummary({
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-radiomke-cream-500">Data Summary</h3>
         <span className="text-sm text-radiomke-cream-600">
-          {successfulFiles} of {uploadedFiles.length} files processed
+          {successfulFiles} of {fileList.length} files processed
         </span>
       </div>
 
@@ -131,7 +136,7 @@ export default function DataSummary({
       {/* File List */}
       <div className="space-y-2">
         <h4 className="text-sm font-semibold text-radiomke-cream-600">Uploaded Files</h4>
-        {uploadedFiles.map((file) => (
+        {fileList.map((file) => (
           <div
             key={file.id}
             className="flex items-center justify-between bg-radiomke-charcoal-700 rounded-lg p-3"
