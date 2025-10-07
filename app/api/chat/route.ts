@@ -1,4 +1,5 @@
 import { OpenAI } from "openai";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export const runtime = "edge";
 
@@ -71,27 +72,70 @@ async function executeToolCall(toolName: string, toolArgs: any) {
   try {
     if (toolName === "list_available_tables") {
       console.log("Calling list_available_tables tool...");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/tools/list-tables`);
-      const data = await response.json();
+
+      // Call Supabase directly instead of HTTP fetch
+      const potentialTables = [
+        'radio_milwaukee_daily_overview',
+        'radio_milwaukee_device_analysis',
+      ];
+
+      const existingTables = [];
+      for (const tableName of potentialTables) {
+        try {
+          const { error } = await supabaseAdmin
+            .from(tableName)
+            .select('id')
+            .limit(1);
+
+          if (!error) {
+            existingTables.push(tableName);
+          }
+        } catch (e) {
+          // Table doesn't exist, skip
+        }
+      }
+
+      const data = {
+        success: true,
+        tables: existingTables,
+      };
+
       console.log("Available tables:", data);
       return JSON.stringify(data);
     }
 
     if (toolName === "query_radio_data") {
       console.log("Calling query_radio_data with table:", toolArgs.tableName);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/tools/query-data`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tableName: toolArgs.tableName,
-          query: {
-            limit: toolArgs.limit || 100,
-          },
-        }),
-      });
-      const data = await response.json();
-      console.log(`Query returned ${data.rowCount || 0} rows`);
-      return JSON.stringify(data);
+
+      const tableName = toolArgs.tableName;
+      const limit = toolArgs.limit || 100;
+
+      if (!tableName) {
+        return JSON.stringify({ error: "Table name is required" });
+      }
+
+      // Query Supabase directly
+      let query = supabaseAdmin.from(tableName).select("*");
+
+      if (limit) {
+        query = query.limit(limit);
+      }
+
+      const { data: rows, error } = await query;
+
+      if (error) {
+        console.error("Query error:", error);
+        return JSON.stringify({ error: `Query failed: ${error.message}` });
+      }
+
+      const result = {
+        success: true,
+        data: rows,
+        rowCount: rows?.length || 0,
+      };
+
+      console.log(`Query returned ${result.rowCount} rows from ${tableName}`);
+      return JSON.stringify(result);
     }
 
     return JSON.stringify({ error: `Unknown tool: ${toolName}` });
