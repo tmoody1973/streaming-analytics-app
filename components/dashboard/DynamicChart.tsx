@@ -16,45 +16,48 @@ const RADIO_MKE_THEME = {
   axis: {
     ticks: {
       text: {
-        fill: "#9CA3AF",
-        fontSize: 11,
+        fill: "#D1D5DB",
+        fontSize: 13,
+        fontWeight: 500,
       },
     },
     legend: {
       text: {
-        fill: "#E5E7EB",
-        fontSize: 12,
-        fontWeight: 500,
+        fill: "#F3F4F6",
+        fontSize: 14,
+        fontWeight: 600,
       },
     },
   },
   grid: {
     line: {
-      stroke: "#374151",
+      stroke: "#4B5563",
       strokeWidth: 1,
     },
   },
   legends: {
     text: {
-      fill: "#E5E7EB",
-      fontSize: 11,
+      fill: "#F3F4F6",
+      fontSize: 13,
+      fontWeight: 500,
     },
   },
   labels: {
     text: {
       fill: "#1F2937",
-      fontSize: 11,
-      fontWeight: 600,
+      fontSize: 12,
+      fontWeight: 700,
     },
   },
   tooltip: {
     container: {
       background: "#1F2937",
-      color: "#E5E7EB",
-      fontSize: 12,
+      color: "#F3F4F6",
+      fontSize: 14,
       borderRadius: "8px",
-      boxShadow: "0 3px 9px rgba(0, 0, 0, 0.5)",
-      padding: "9px 12px",
+      boxShadow: "0 10px 25px rgba(0, 0, 0, 0.5)",
+      padding: "12px 16px",
+      border: "1px solid #4B5563",
     },
   },
 };
@@ -116,46 +119,48 @@ export default function DynamicChart({ chart, data }: DynamicChartProps) {
             data={lineData}
             theme={RADIO_MKE_THEME}
             colors={COLORS}
-            margin={{ top: 20, right: 120, bottom: 50, left: 60 }}
+            margin={{ top: 30, right: 140, bottom: 80, left: 70 }}
             xScale={{ type: "point" }}
             yScale={{ type: "linear", min: "auto", max: "auto" }}
             axisTop={null}
             axisRight={null}
             axisBottom={{
-              tickSize: 5,
-              tickPadding: 5,
+              tickSize: 8,
+              tickPadding: 10,
               tickRotation: -45,
-              legend: chart.xAxis,
-              legendOffset: 45,
+              legend: chart.xAxis?.toUpperCase() || "X AXIS",
+              legendOffset: 70,
               legendPosition: "middle",
             }}
             axisLeft={{
-              tickSize: 5,
-              tickPadding: 5,
+              tickSize: 8,
+              tickPadding: 10,
               tickRotation: 0,
-              legend: chart.dataKeys.join(", "),
-              legendOffset: -50,
+              legend: chart.dataKeys.join(", ").toUpperCase(),
+              legendOffset: -60,
               legendPosition: "middle",
             }}
-            pointSize={8}
+            pointSize={10}
             pointColor={{ from: "color", modifiers: [] }}
-            pointBorderWidth={2}
+            pointBorderWidth={3}
             pointBorderColor={{ from: "serieColor" }}
             pointLabelYOffset={-12}
             useMesh={true}
             enableSlices="x"
+            curve="monotoneX"
+            lineWidth={3}
             legends={[
               {
                 anchor: "bottom-right",
                 direction: "column",
                 justify: false,
-                translateX: 100,
+                translateX: 120,
                 translateY: 0,
-                itemsSpacing: 2,
+                itemsSpacing: 8,
                 itemDirection: "left-to-right",
-                itemWidth: 80,
-                itemHeight: 20,
-                symbolSize: 12,
+                itemWidth: 100,
+                itemHeight: 24,
+                symbolSize: 16,
                 symbolShape: "circle",
               },
             ]}
@@ -171,7 +176,7 @@ export default function DynamicChart({ chart, data }: DynamicChartProps) {
             indexBy={chart.xAxis || "x"}
             theme={RADIO_MKE_THEME}
             colors={COLORS}
-            margin={{ top: 20, right: 120, bottom: 50, left: 60 }}
+            margin={{ top: 30, right: 140, bottom: 80, left: 70 }}
             padding={0.3}
             valueScale={{ type: "linear" }}
             indexScale={{ type: "band", round: true }}
@@ -179,20 +184,20 @@ export default function DynamicChart({ chart, data }: DynamicChartProps) {
             axisTop={null}
             axisRight={null}
             axisBottom={{
-              tickSize: 5,
-              tickPadding: 5,
+              tickSize: 8,
+              tickPadding: 10,
               tickRotation: -45,
-              legend: chart.xAxis,
+              legend: chart.xAxis?.toUpperCase() || "X AXIS",
               legendPosition: "middle",
-              legendOffset: 45,
+              legendOffset: 70,
             }}
             axisLeft={{
-              tickSize: 5,
-              tickPadding: 5,
+              tickSize: 8,
+              tickPadding: 10,
               tickRotation: 0,
-              legend: chart.dataKeys.join(", "),
+              legend: chart.dataKeys.join(", ").toUpperCase(),
               legendPosition: "middle",
-              legendOffset: -50,
+              legendOffset: -60,
             }}
             labelSkipWidth={12}
             labelSkipHeight={12}
@@ -203,13 +208,13 @@ export default function DynamicChart({ chart, data }: DynamicChartProps) {
                 anchor: "bottom-right",
                 direction: "column",
                 justify: false,
-                translateX: 100,
+                translateX: 120,
                 translateY: 0,
-                itemsSpacing: 2,
-                itemWidth: 80,
-                itemHeight: 20,
+                itemsSpacing: 8,
+                itemWidth: 100,
+                itemHeight: 24,
                 itemDirection: "left-to-right",
-                symbolSize: 12,
+                symbolSize: 16,
               },
             ]}
             role="application"
@@ -373,13 +378,13 @@ export default function DynamicChart({ chart, data }: DynamicChartProps) {
 
   return (
     <div className="bg-radiomke-charcoal-600 rounded-lg p-6 border border-radiomke-charcoal-400/30">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold text-radiomke-cream-500">{chart.title}</h3>
+      <div className="mb-6">
+        <h3 className="text-xl font-bold text-radiomke-cream-500">{chart.title}</h3>
         {chart.description && (
-          <p className="text-sm text-radiomke-cream-600 mt-1">{chart.description}</p>
+          <p className="text-sm text-radiomke-cream-600 mt-2">{chart.description}</p>
         )}
       </div>
-      <div className={chart.type === "table" ? "" : "h-80"}>{renderChart()}</div>
+      <div className={chart.type === "table" ? "" : "h-96"}>{renderChart()}</div>
     </div>
   );
 }
