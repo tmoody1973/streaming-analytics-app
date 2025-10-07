@@ -120,6 +120,7 @@ export default function FileUploader({ onFilesUploaded, onError, showInstruction
             recordCount: 0,
             status: 'error',
             errorMessage: error instanceof Error ? error.message : 'Upload failed',
+            data: [], // Empty array for failed upload
           });
         }
       }
