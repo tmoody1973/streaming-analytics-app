@@ -32,6 +32,25 @@ export default function Home() {
     enabled: !!currentDashboardId,
   });
 
+  // Load existing tables from Supabase on mount
+  useEffect(() => {
+    const loadExistingTables = async () => {
+      try {
+        const response = await fetch('/api/tools/list-tables');
+        const data = await response.json();
+
+        if (data.success && data.tables && data.tables.length > 0) {
+          setUploadedTables(data.tables);
+          console.log('✅ Found existing tables in Supabase:', data.tables);
+        }
+      } catch (error) {
+        console.error('Error loading existing tables:', error);
+      }
+    };
+
+    loadExistingTables();
+  }, []);
+
   // Load last dashboard or create default on mount
   useEffect(() => {
     setMounted(true);
