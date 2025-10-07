@@ -1,18 +1,20 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Upload, Save, Clock } from "lucide-react";
+import { Upload, Save, Clock, HelpCircle } from "lucide-react";
 import { Editor, getSnapshot, loadSnapshot } from "tldraw";
 import { CanvasWorkspace, createC1Card } from "@/components/canvas/CanvasWorkspace";
 import { UploadModal } from "@/components/canvas/UploadModal";
 import { CommandPalette } from "@/components/canvas/CommandPalette";
 import { DashboardSelector } from "@/components/canvas/DashboardSelector";
+import { DataGuide } from "@/components/help/DataGuide";
 import { useDashboardAutoSave } from "@/hooks/useDashboardAutoSave";
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
+  const [showDataGuide, setShowDataGuide] = useState(false);
   const [uploadedTables, setUploadedTables] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const editorRef = useRef<Editor | null>(null);
@@ -273,6 +275,14 @@ export default function Home() {
               <Upload className="w-4 h-4" />
               Upload CSV
             </button>
+            <button
+              onClick={() => setShowDataGuide(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-radiomke-blue-500 hover:bg-radiomke-blue-600 text-radiomke-cream-500 rounded-lg transition-colors text-sm font-medium"
+              title="Data Management Guide"
+            >
+              <HelpCircle className="w-4 h-4" />
+              Help
+            </button>
             <div className="px-3 py-2 bg-radiomke-charcoal-700 rounded-lg text-xs text-radiomke-cream-600">
               Press <kbd className="px-2 py-1 bg-radiomke-charcoal-600 border border-radiomke-charcoal-400 rounded shadow-sm text-radiomke-cream-500">⌘K</kbd> to add charts
             </div>
@@ -291,6 +301,9 @@ export default function Home() {
         onClose={() => setShowUploadModal(false)}
         onUploadSuccess={handleUploadSuccess}
       />
+
+      {/* Data Guide Modal */}
+      {showDataGuide && <DataGuide onClose={() => setShowDataGuide(false)} />}
 
       {/* Command Palette (Cmd+K) */}
       <CommandPalette
