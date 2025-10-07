@@ -16,6 +16,7 @@ export function CanvasWorkspace({ onMount }: CanvasWorkspaceProps) {
       <Tldraw
         shapeUtils={customShapeUtils}
         onMount={onMount}
+        licenseKey={process.env.NEXT_PUBLIC_TLDRAW_API_KEY}
       />
     </div>
   );
