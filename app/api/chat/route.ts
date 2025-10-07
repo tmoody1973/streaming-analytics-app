@@ -10,28 +10,45 @@ const client = new OpenAI({
 
 const SYSTEM_PROMPT = `You are a Radio Analytics AI Assistant that creates data visualizations using C1's generative UI capabilities.
 
-IMPORTANT: You MUST use BOTH tools to complete any request:
-1. FIRST: Use list_available_tables to find what tables exist
-2. THEN: Use query_radio_data to fetch the actual data (THIS IS REQUIRED!)
-3. FINALLY: Generate a C1 UI component with the data
+CRITICAL WORKFLOW - Follow these steps for EVERY request:
 
-You have access to two tools:
-- list_available_tables: Lists available data tables
-- query_radio_data: Fetches actual data from a table (YOU MUST USE THIS!)
+1. **Discover Available Data**
+   - Use list_available_tables to see what datasets exist
+   - This returns all uploaded CSV files as table names
 
-When responding, generate C1 UI components with the data. Your response should be a valid C1 GenUI DSL that creates interactive visualizations.
+2. **Understand the Schema** (NEW!)
+   - Use get_table_schema to see column names, types, and sample data
+   - This prevents errors and helps you understand what data is available
+   - Example: get_table_schema("radio_milwaukee_daily_overview")
 
-NEVER respond without first querying the actual data using query_radio_data.
-ALWAYS fetch data before generating any visualization or analysis.
+3. **Fetch Real Data**
+   - Use query_radio_data with the exact table and column names from step 2
+   - NEVER make up data or column names
+   - Use the limit parameter to control how much data to fetch
 
-Radio metrics you can analyze:
-- CUME (cumulative audience)
-- TLH (Total Listening Hours)
-- TSL (Time Spent Listening)
-- AQH (Average Quarter Hour)
-- Station performance
-- Device types
-- Dayparts`;
+4. **Generate Visualization**
+   - Create C1 UI components using the REAL data you fetched
+   - Your response should be valid C1 GenUI DSL
+
+You have access to THREE tools:
+- list_available_tables: Discover all uploaded datasets
+- get_table_schema: See column names, types, and sample data for a table
+- query_radio_data: Fetch actual data from a specific table
+
+STRICT RULES:
+- NEVER respond without fetching actual data first
+- NEVER invent column names - use get_table_schema to see what exists
+- NEVER create fake/example data - ONLY use real data from the database
+- ALWAYS use the exact column names from get_table_schema
+
+Common radio metrics (but VERIFY with get_table_schema first):
+- CUME (cumulative audience) - usually numeric
+- TLH (Total Listening Hours) - usually numeric
+- TSL (Time Spent Listening) - usually numeric
+- Active Sessions / AAS - usually numeric
+- Station - usually text
+- Device - usually text
+- Date - usually date/timestamp`;
 
 const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
   {
@@ -42,6 +59,23 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
       parameters: {
         type: "object",
         properties: {},
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_table_schema",
+      description: "Get detailed information about a table's structure including column names, data types, and sample data. Use this to understand what data is available before querying.",
+      parameters: {
+        type: "object",
+        properties: {
+          tableName: {
+            type: "string",
+            description: "The name of the table to inspect",
+          },
+        },
+        required: ["tableName"],
       },
     },
   },
@@ -73,35 +107,143 @@ async function executeToolCall(toolName: string, toolArgs: any) {
     if (toolName === "list_available_tables") {
       console.log("Calling list_available_tables tool...");
 
-      // Call Supabase directly instead of HTTP fetch
-      const potentialTables = [
-        'radio_milwaukee_daily_overview',
-        'radio_milwaukee_device_analysis',
-      ];
+      // DYNAMIC TABLE DISCOVERY: Query Supabase for all tables starting with 'radio_milwaukee_'
+      // This automatically finds any uploaded CSV without code changes
+      try {
+        const { data: tables, error } = await supabaseAdmin.rpc('get_public_tables');
 
-      const existingTables = [];
-      for (const tableName of potentialTables) {
-        try {
-          const { error } = await supabaseAdmin
-            .from(tableName)
-            .select('id')
-            .limit(1);
+        if (error) {
+          console.log("RPC not available, using fallback discovery");
 
-          if (!error) {
-            existingTables.push(tableName);
+          // Fallback: Try common table patterns
+          const commonPatterns = [
+            'radio_milwaukee_daily_overview',
+            'radio_milwaukee_device_analysis',
+            'radio_milwaukee_daypart',
+            'radio_milwaukee_hourly',
+          ];
+
+          const existingTables = [];
+          for (const tableName of commonPatterns) {
+            try {
+              const { error: checkError } = await supabaseAdmin
+                .from(tableName)
+                .select('id')
+                .limit(1);
+
+              if (!checkError) {
+                existingTables.push(tableName);
+              }
+            } catch (e) {
+              // Table doesn't exist, skip
+            }
           }
-        } catch (e) {
-          // Table doesn't exist, skip
+
+          return JSON.stringify({
+            success: true,
+            tables: existingTables,
+          });
         }
+
+        // Filter for radio_milwaukee_ tables from RPC result
+        const radioTables = tables
+          .filter((table: any) => table.tablename?.startsWith('radio_milwaukee_'))
+          .map((table: any) => table.tablename);
+
+        console.log("Dynamically discovered tables:", radioTables);
+
+        return JSON.stringify({
+          success: true,
+          tables: radioTables,
+        });
+      } catch (err: any) {
+        console.error("Table discovery error:", err);
+        return JSON.stringify({
+          success: false,
+          tables: [],
+          error: err.message
+        });
+      }
+    }
+
+    if (toolName === "get_table_schema") {
+      console.log("Calling get_table_schema for table:", toolArgs.tableName);
+
+      const tableName = toolArgs.tableName;
+
+      if (!tableName) {
+        return JSON.stringify({ error: "Table name is required" });
       }
 
-      const data = {
-        success: true,
-        tables: existingTables,
-      };
+      try {
+        // Get 5 sample rows to analyze schema
+        const { data: sampleRows, error: sampleError } = await supabaseAdmin
+          .from(tableName)
+          .select("*")
+          .limit(5);
 
-      console.log("Available tables:", data);
-      return JSON.stringify(data);
+        if (sampleError) {
+          console.error("Schema fetch error:", sampleError);
+          return JSON.stringify({
+            success: false,
+            error: `Failed to fetch schema: ${sampleError.message}`
+          });
+        }
+
+        if (!sampleRows || sampleRows.length === 0) {
+          return JSON.stringify({
+            success: true,
+            tableName,
+            columns: [],
+            sampleData: [],
+            message: "Table exists but is empty"
+          });
+        }
+
+        // Extract column names and infer types from first row
+        const firstRow = sampleRows[0];
+        const columns = Object.keys(firstRow).map(colName => {
+          const value = firstRow[colName];
+          let type = "unknown";
+
+          if (value === null || value === undefined) {
+            type = "nullable";
+          } else if (typeof value === "number") {
+            type = "number";
+          } else if (typeof value === "string") {
+            // Try to detect date strings
+            if (!isNaN(Date.parse(value))) {
+              type = "date/string";
+            } else {
+              type = "string";
+            }
+          } else if (typeof value === "boolean") {
+            type = "boolean";
+          }
+
+          return {
+            name: colName,
+            type,
+            sample: value
+          };
+        });
+
+        console.log(`Schema for ${tableName}:`, columns.map(c => c.name).join(", "));
+
+        return JSON.stringify({
+          success: true,
+          tableName,
+          columns,
+          sampleData: sampleRows,
+          rowCount: sampleRows.length
+        });
+      } catch (err: any) {
+        console.error("get_table_schema error:", err);
+        return JSON.stringify({
+          success: false,
+          error: err.message
+        });
+      }
     }
 
     if (toolName === "query_radio_data") {
