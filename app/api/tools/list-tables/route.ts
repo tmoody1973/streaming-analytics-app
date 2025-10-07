@@ -9,6 +9,7 @@ export async function GET() {
 
     if (error) {
       // Fallback to hardcoded list if RPC doesn't exist
+      console.error("RPC error (get_public_tables):", error);
       console.log("RPC not available, using fallback method");
 
       // Try to query all known tables
