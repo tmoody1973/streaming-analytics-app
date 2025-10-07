@@ -32,9 +32,10 @@ TOOLS:
 - execute_smart_query(queryType, stations, metric): ADVANCED - Use for comparisons, rankings, "best" queries
   * queryType options: "compare_stations", "best_hours", "station_overview", "hourly_trends"
   * Automatically aggregates, filters, and sorts data
+  * Metrics: cume, tlh, tsl, activesessions
   * Examples:
-    - Compare WYMS vs WYMSHD2: execute_smart_query("compare_stations", ["WYMSFM", "WYMSHD2"], "cume")
-    - Find best hours: execute_smart_query("best_hours", ["WYMSFM"], "cume", 5)
+    - Compare WYMS vs WYMSHD2: execute_smart_query("compare_stations", ["WYMS", "WYMSHD2"], "cume")
+    - Find best hours: execute_smart_query("best_hours", ["WYMS"], "tlh", 5)
 
 HANDLING COMPARISONS:
 When user asks to compare stations (e.g., "Compare WYMS vs WYMSHD2"):
@@ -52,7 +53,7 @@ STRICT RULES:
 - If you fetch data → you MUST create a visualization
 - Never return empty/null content after tool calls
 - Show the data even if it's not perfect
-- Common columns: Station, Hour, Date, CUME, TLH, TSL, AAS, Device
+- Common columns: station, hour, date, cume, tlh, tsl, activesessions
 
 If you're unsure what to visualize: Create a Table showing the raw data!`;
 
@@ -63,25 +64,25 @@ const QUERY_TEMPLATES = {
     return `
       SELECT
         station,
-        hour_of_day as hour,
+        hour,
         ROUND(AVG(${metric})::numeric, 2) as avg_${metric},
         COUNT(*) as data_points
       FROM radio_milwaukee_hourly_patterns
       WHERE UPPER(station) IN (${stationList})
-      GROUP BY station, hour_of_day
-      ORDER BY hour_of_day, station
+      GROUP BY station, hour
+      ORDER BY hour, station
     `;
   },
 
   best_hours_for_station: (station: string, metric: string = 'cume', limit: number = 5) => {
     return `
       SELECT
-        hour_of_day as hour,
+        hour,
         ROUND(AVG(${metric})::numeric, 2) as avg_${metric},
-        COUNT(*) as weeks_analyzed
+        COUNT(*) as total_records
       FROM radio_milwaukee_hourly_patterns
       WHERE UPPER(station) = '${station.toUpperCase()}'
-      GROUP BY hour_of_day
+      GROUP BY hour
       ORDER BY avg_${metric} DESC
       LIMIT ${limit}
     `;
@@ -93,8 +94,8 @@ const QUERY_TEMPLATES = {
         station,
         ROUND(AVG(cume)::numeric, 2) as avg_cume,
         ROUND(AVG(tlh)::numeric, 2) as avg_tlh,
-        ROUND(AVG(aas)::numeric, 2) as avg_aas,
-        COUNT(DISTINCT week) as weeks_of_data
+        ROUND(AVG(activesessions)::numeric, 2) as avg_activesessions,
+        COUNT(*) as total_records
       FROM radio_milwaukee_hourly_patterns
       WHERE UPPER(station) = '${station.toUpperCase()}'
       GROUP BY station
@@ -104,12 +105,12 @@ const QUERY_TEMPLATES = {
   hourly_trends: (station: string, metric: string = 'cume') => {
     return `
       SELECT
-        hour_of_day as hour,
-        week,
+        hour,
+        date,
         ${metric}
       FROM radio_milwaukee_hourly_patterns
       WHERE UPPER(station) = '${station.toUpperCase()}'
-      ORDER BY week, hour_of_day
+      ORDER BY date, hour
       LIMIT 500
     `;
   },
@@ -185,8 +186,8 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
           },
           metric: {
             type: "string",
-            enum: ["cume", "tlh", "tsl", "aas"],
-            description: "Metric to analyze (default: cume). cume=audience, tlh=listening hours, tsl=time spent, aas=active sessions"
+            enum: ["cume", "tlh", "tsl", "activesessions"],
+            description: "Metric to analyze (default: cume). cume=audience, tlh=listening hours, tsl=time spent, activesessions=active sessions"
           },
           limit: {
             type: "number",
