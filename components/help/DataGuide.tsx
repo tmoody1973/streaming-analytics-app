@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { X, Upload, Database, Sparkles, Link2, Info } from "lucide-react";
+import { X, Upload, Database, Sparkles, Link2, Info, FileText } from "lucide-react";
 
 interface DataGuideProps {
   onClose: () => void;
 }
 
 export function DataGuide({ onClose }: DataGuideProps) {
-  const [activeTab, setActiveTab] = useState<"overview" | "upload" | "query" | "combine">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "upload" | "query" | "combine" | "exports">("overview");
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -70,6 +70,16 @@ export function DataGuide({ onClose }: DataGuideProps) {
           >
             Combine Data
           </button>
+          <button
+            onClick={() => setActiveTab("exports")}
+            className={`px-6 py-3 font-medium transition-colors ${
+              activeTab === "exports"
+                ? "text-radiomke-orange-400 border-b-2 border-radiomke-orange-400"
+                : "text-radiomke-cream-600 hover:text-radiomke-cream-500"
+            }`}
+          >
+            Export Guide
+          </button>
         </div>
 
         {/* Content */}
@@ -78,6 +88,7 @@ export function DataGuide({ onClose }: DataGuideProps) {
           {activeTab === "upload" && <UploadTab />}
           {activeTab === "query" && <QueryTab />}
           {activeTab === "combine" && <CombineTab />}
+          {activeTab === "exports" && <ExportsTab />}
         </div>
       </div>
     </div>
@@ -520,6 +531,271 @@ function CombineTab() {
             <span>Upload the combined CSV with a descriptive name like <code className="bg-radiomke-charcoal-600 px-1.5 py-0.5 rounded text-radiomke-orange-400 text-xs">radio_milwaukee_daily_device_combined.csv</code></span>
           </li>
         </ol>
+      </div>
+    </div>
+  );
+}
+
+function ExportsTab() {
+  return (
+    <div className="space-y-6">
+      <div className="bg-radiomke-orange-500/10 border border-radiomke-orange-500/30 rounded-lg p-5">
+        <h3 className="text-radiomke-orange-300 font-semibold mb-2 flex items-center gap-2">
+          <FileText className="w-5 h-5" />
+          Complete CSV Export Guide
+        </h3>
+        <p className="text-radiomke-cream-600 text-sm">
+          This comprehensive guide lists all 22 possible CSV exports from Triton Webcast Metrics and Nielsen
+          to make the Radio Milwaukee analytics app fully functional for program director decision-making.
+        </p>
+      </div>
+
+      {/* Essential Exports */}
+      <div>
+        <h4 className="text-radiomke-cream-500 font-semibold mb-3 flex items-center gap-2">
+          🟢 Essential Exports (Start Here)
+        </h4>
+        <div className="space-y-3">
+          <ExportCard
+            name="Daily Overview"
+            filename="radio_milwaukee_daily_overview.csv"
+            description="Main dashboard metrics and trend analysis"
+            columns={["Date", "Station", "CUME", "TLH", "Active Sessions", "AAS"]}
+            steps={[
+              "Date Range: Last 18 Months",
+              "Dimension: Date (daily breakdown)",
+              "Include all stations",
+            ]}
+          />
+          <ExportCard
+            name="Daypart Performance"
+            filename="radio_milwaukee_daypart_performance.csv"
+            description="Compare performance across different time periods"
+            columns={["Daypart", "CUME", "TLH", "Active Sessions", "TSL"]}
+            steps={[
+              "Date Range: Last 18 Months",
+              "Dimension: Daypart (Morning Drive, Mid-Day, etc.)",
+            ]}
+          />
+          <ExportCard
+            name="Device Analysis"
+            filename="radio_milwaukee_device_analysis.csv"
+            description="Understand how listeners access your streams"
+            columns={["Device Family", "CUME", "TLH", "Active Sessions"]}
+            steps={[
+              "Date Range: Last 18 Months",
+              "Dimension: Device Family or Platform",
+            ]}
+          />
+        </div>
+      </div>
+
+      {/* Recommended Exports */}
+      <div>
+        <h4 className="text-radiomke-cream-500 font-semibold mb-3 flex items-center gap-2">
+          🟡 Recommended Exports
+        </h4>
+        <div className="space-y-3">
+          <ExportCard
+            name="Day of Week Analysis"
+            filename="radio_milwaukee_day_of_week.csv"
+            description="Understand weekly listening patterns"
+            columns={["Day of Week", "CUME", "TLH", "Active Sessions"]}
+            steps={[
+              "Date Range: Last 18 Months",
+              "Dimension: Day of Week",
+            ]}
+          />
+          <ExportCard
+            name="Monthly Trends"
+            filename="radio_milwaukee_monthly_trends.csv"
+            description="Long-term trend analysis for strategic planning"
+            columns={["Month/Year", "CUME", "TLH", "Active Sessions"]}
+            steps={[
+              "Date Range: Last 12 Months",
+              "Dimension: Month/Year",
+            ]}
+          />
+          <ExportCard
+            name="Hourly Patterns"
+            filename="radio_milwaukee_hourly_patterns.csv"
+            description="Identify peak listening hours for programming decisions"
+            columns={["Hour of Day", "CUME", "TLH", "Active Sessions"]}
+            steps={[
+              "Date Range: Last 18 Months",
+              "Dimension: Hour of Day (0-23)",
+            ]}
+          />
+        </div>
+      </div>
+
+      {/* Advanced Exports Info */}
+      <div className="bg-radiomke-blue-500/10 border border-radiomke-blue-500/30 rounded-lg p-4">
+        <h4 className="text-radiomke-blue-300 font-semibold mb-2 text-sm">🔵 Advanced Exports Available</h4>
+        <p className="text-radiomke-cream-600 text-sm mb-3">
+          Beyond the essential and recommended exports, there are 16 additional advanced exports available:
+        </p>
+        <ul className="space-y-1 text-radiomke-cream-600 text-sm pl-4">
+          <li className="flex items-start gap-2">
+            <span className="text-radiomke-blue-400">•</span>
+            <span><strong>Detailed Daypart Exports:</strong> Morning Drive (6AM-10AM), Midday (10AM-3PM), Afternoon Drive (3PM-7PM), Evening (7PM-12AM), Weekend Daytime, Weekend Evening, Overnight</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-radiomke-blue-400">•</span>
+            <span><strong>Geographic Analysis:</strong> CUME distribution by location</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-radiomke-blue-400">•</span>
+            <span><strong>Stream Comparison:</strong> Performance across different Radio Milwaukee streams</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-radiomke-blue-400">•</span>
+            <span><strong>Cross-Analysis:</strong> Daypart by Device, Weekend vs Weekday</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-radiomke-blue-400">•</span>
+            <span><strong>Nielsen Demographics:</strong> Age, Gender, Ethnic, Daypart Demographics, P1 Listeners</span>
+          </li>
+        </ul>
+      </div>
+
+      {/* File Naming Convention */}
+      <div className="bg-radiomke-charcoal-600 rounded-lg p-5 border border-radiomke-charcoal-400/30">
+        <h4 className="text-radiomke-cream-500 font-semibold mb-3">📝 File Naming Convention</h4>
+        <p className="text-radiomke-cream-600 text-sm mb-3">
+          Use this naming pattern for easy identification:
+        </p>
+        <div className="bg-radiomke-charcoal-700 rounded p-3 mb-3">
+          <code className="text-radiomke-orange-400 text-sm">
+            radio_milwaukee_[analysis_type]_[date_range].csv
+          </code>
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-green-400">✓</span>
+            <code className="text-radiomke-cream-500 text-xs">radio_milwaukee_daily_overview_last30days.csv</code>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-green-400">✓</span>
+            <code className="text-radiomke-cream-500 text-xs">radio_milwaukee_device_analysis_18months.csv</code>
+          </div>
+        </div>
+      </div>
+
+      {/* Upload Order Recommendation */}
+      <div className="bg-radiomke-orange-500/10 border border-radiomke-orange-500/30 rounded-lg p-4">
+        <h4 className="text-radiomke-orange-300 font-semibold mb-2 text-sm">✨ Upload Order Recommendation</h4>
+        <p className="text-radiomke-cream-600 text-sm mb-3">
+          For best results, upload files in this order:
+        </p>
+        <ol className="space-y-1 text-radiomke-cream-600 text-sm pl-4">
+          <li className="flex gap-2">
+            <span className="text-radiomke-orange-400 font-bold">1.</span>
+            <span>Daily Overview (primary data)</span>
+          </li>
+          <li className="flex gap-2">
+            <span className="text-radiomke-orange-400 font-bold">2.</span>
+            <span>Daypart Performance</span>
+          </li>
+          <li className="flex gap-2">
+            <span className="text-radiomke-orange-400 font-bold">3.</span>
+            <span>Device Analysis</span>
+          </li>
+          <li className="flex gap-2">
+            <span className="text-radiomke-orange-400 font-bold">4.</span>
+            <span>Day of Week Analysis</span>
+          </li>
+          <li className="flex gap-2">
+            <span className="text-radiomke-orange-400 font-bold">5.</span>
+            <span>Additional analysis files as needed</span>
+          </li>
+        </ol>
+        <p className="text-radiomke-cream-600 text-xs mt-3">
+          This ensures the main dashboard populates first, then additional analysis features become available as you upload more specific data files.
+        </p>
+      </div>
+
+      {/* Multi-Station Note */}
+      <div className="bg-radiomke-blue-500/10 border border-radiomke-blue-500/30 rounded-lg p-4">
+        <h4 className="text-radiomke-blue-300 font-semibold mb-2 text-sm">📻 Multi-Station Data Management</h4>
+        <p className="text-radiomke-cream-600 text-sm mb-3">
+          Radio Milwaukee operates multiple stations and streams. Each CSV export should include a "Station" or "Stream" column to enable filtering and comparison.
+        </p>
+        <p className="text-radiomke-cream-600 text-sm">
+          <strong className="text-radiomke-cream-500">Recommended approach:</strong> Generate combined CSV files with station identification columns to enable easy cross-station analysis while maintaining the ability to filter by individual stations.
+        </p>
+      </div>
+
+      {/* Link to Full Documentation */}
+      <div className="bg-radiomke-charcoal-600 rounded-lg p-5 border-l-4 border-radiomke-orange-500">
+        <h4 className="text-radiomke-cream-500 font-semibold mb-2 flex items-center gap-2">
+          <Info className="w-5 h-5 text-radiomke-orange-400" />
+          Complete Documentation
+        </h4>
+        <p className="text-radiomke-cream-600 text-sm">
+          For detailed information on all 22 CSV exports, including specific Triton Webcast Explore settings,
+          Nielsen demographics exports, and strategic applications, refer to the complete{" "}
+          <code className="bg-radiomke-charcoal-700 px-2 py-1 rounded text-radiomke-orange-400 text-xs">
+            docs/csv_exports_guide.md
+          </code>{" "}
+          documentation file in the project repository.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+interface ExportCardProps {
+  name: string;
+  filename: string;
+  description: string;
+  columns: string[];
+  steps: string[];
+}
+
+function ExportCard({ name, filename, description, columns, steps }: ExportCardProps) {
+  return (
+    <div className="bg-radiomke-charcoal-600 rounded-lg p-4 border border-radiomke-charcoal-400/30">
+      <div className="mb-3">
+        <h5 className="text-radiomke-cream-500 font-semibold mb-1">{name}</h5>
+        <p className="text-radiomke-cream-600 text-sm mb-2">{description}</p>
+      </div>
+
+      <div className="space-y-2 text-sm">
+        {/* Filename */}
+        <div>
+          <span className="text-radiomke-cream-600 text-xs">Filename: </span>
+          <code className="text-radiomke-orange-400 bg-radiomke-charcoal-700 px-2 py-1 rounded text-xs">
+            {filename}
+          </code>
+        </div>
+
+        {/* Required Columns */}
+        <div>
+          <span className="text-radiomke-cream-600 text-xs">Required Columns: </span>
+          <div className="flex flex-wrap gap-1 mt-1">
+            {columns.map((col) => (
+              <span
+                key={col}
+                className="text-xs bg-radiomke-charcoal-700 text-radiomke-blue-300 px-2 py-1 rounded"
+              >
+                {col}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Triton Steps */}
+        <div>
+          <span className="text-radiomke-cream-600 text-xs">Export Steps:</span>
+          <ol className="list-decimal list-inside mt-1 space-y-1">
+            {steps.map((step, idx) => (
+              <li key={idx} className="text-xs text-radiomke-cream-500">
+                {step}
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     </div>
   );
